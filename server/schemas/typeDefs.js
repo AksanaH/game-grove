@@ -1,11 +1,12 @@
 const typeDefs = `
-    type Book {
-        authors: [String]
+    type Game {
+        creators: [String]
+         title: String!
         description: String!
-        bookId: String!
+        gameId: String!
         image: String
         link: String
-        title: String!
+    
     }
 
     type User {
@@ -13,7 +14,7 @@ const typeDefs = `
         username: String!
         email: String!
         password: String!
-        savedBooks: Book
+        savedGames: [Game]
     }   
 
     type Auth {
@@ -22,13 +23,15 @@ const typeDefs = `
     }
     type Query {
         getSingleUser(userId: ID, username: String): User
+        getAllGames: [Game]
+        getSingleGame(gameId: String!): Game
     }
 
     type Mutation {
         createUser(username: String!, email: String!, password: String!): Auth 
         login(email: String, password: String!): Auth
-        saveBook(bookId: String!, description: String!, title: String!, authors: [String], image: String, link: String): User
-        deleteBook(bookId: String!): User 
+        saveGame(gameId: String!, description: String!, title: String!, creators: [String], image: String, link: String): Game
+        deleteGame(gameId: String!): Game
     }
 `;
 
