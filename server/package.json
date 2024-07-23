@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@apollo/client": "^3.11.0",
     "@apollo/server": "^4.10.4",
     "bcrypt": "^5.1.1",
     "express": "^4.17.1",
