@@ -1,4 +1,13 @@
 const typeDefs = `
+    input GameInput {
+        creators: [String]  
+        title: String!
+        description: String!
+        gameId: String!
+        image: String
+        link: String
+        }
+
     type Game {
         creators: [String]
          title: String!
