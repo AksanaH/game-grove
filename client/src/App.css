@@ -1,7 +1,14 @@
+body,
+html,
 #root {
-  max-width: 1280px;
+  height: 100%;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 0;
+  text-align: center;
+}
+.main-content {
+  padding: 20px;
+  margin-top: 56px;
   text-align: center;
 }
 

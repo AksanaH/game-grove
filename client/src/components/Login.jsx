@@ -1,10 +1,10 @@
-import React from 'react';
-import { Button, Checkbox, Form, Input } from 'antd';
+import React from "react";
+import { Button, Checkbox, Form, Input } from "antd";
 const onFinish = (values) => {
-  console.log('Success:', values);
+  console.log("Success:", values);
 };
 const onFinishFailed = (errorInfo) => {
-  console.log('Failed:', errorInfo);
+  console.log("Failed:", errorInfo);
 };
 const Login = () => (
   <Form
@@ -31,7 +31,7 @@ const Login = () => (
       rules={[
         {
           required: true,
-          message: 'Please input your username!',
+          message: "Please input your username!",
         },
       ]}
     >
@@ -44,7 +44,7 @@ const Login = () => (
       rules={[
         {
           required: true,
-          message: 'Please input your password!',
+          message: "Please input your password!",
         },
       ]}
     >
