@@ -1,14 +1,14 @@
-const { User } = require('../models'); 
-const Game = require('../models/games'); 
-const { signToken } = require('../utils/auth');
+const { User } = require("../models");
+const Game = require("../models/games");
+const { signToken } = require("../utils/auth");
 
 const resolvers = {
   Query: {
     getUser: async (parent, { userId }) => {
-      const foundUser = await User.findById(userId).populate('savedGames');
+      const foundUser = await User.findById(userId).populate("savedGames");
 
       if (!foundUser) {
-        throw new Error('Cannot find a user with this id!');
+        throw new Error("Cannot find a user with this id!");
       }
 
       return foundUser;
@@ -21,7 +21,7 @@ const resolvers = {
       const game = await Game.findOne({ gameId });
 
       if (!game) {
-        throw new Error('Cannot find a game with this id!');
+        throw new Error("Cannot find a game with this id!");
       }
 
       return game;
@@ -32,7 +32,7 @@ const resolvers = {
       const user = await User.create({ username, email, password });
 
       if (!user) {
-        throw new Error('Something went wrong!');
+        throw new Error("Something went wrong!");
       }
 
       const token = signToken(user);
@@ -48,7 +48,7 @@ const resolvers = {
       const correctPw = await user.isCorrectPassword(password);
 
       if (!correctPw) {
-        throw new Error('Wrong password!');
+        throw new Error("Wrong password!");
       }
 
       const token = signToken(user);
@@ -56,39 +56,37 @@ const resolvers = {
     },
     saveGame: async (parent, { input }, context) => {
       if (!context.user) {
-        throw new Error('You need to be logged in!');
+        throw new Error("You need to be logged in!");
       }
 
       try {
         const game = new Game(input);
-        await game.save(); 
+        await game.save();
 
-        
         const updatedUser = await User.findByIdAndUpdate(
           context.user._id,
           { $addToSet: { savedGames: game } },
           { new: true, runValidators: true }
-        ).populate('savedGames');
+        ).populate("savedGames");
 
         return updatedUser;
       } catch (err) {
-        throw new Error('Error saving game!');
+        throw new Error("Error saving game!");
       }
     },
     deleteGame: async (parent, { gameId }, context) => {
       if (!context.user) {
-        throw new Error('You need to be logged in!');
+        throw new Error("You need to be logged in!");
       }
 
       try {
-        
         const deletedGame = await Game.findOneAndDelete({ gameId });
 
         const updatedUser = await User.findByIdAndUpdate(
           context.user._id,
           { $pull: { savedGames: { gameId } } },
           { new: true }
-        ).populate('savedGames');
+        ).populate("savedGames");
 
         if (!updatedUser) {
           throw new Error("Couldn't find user with this id!");
@@ -96,7 +94,7 @@ const resolvers = {
 
         return updatedUser;
       } catch (err) {
-        throw new Error('Error deleting game!');
+        throw new Error("Error deleting game!");
       }
     },
   },
