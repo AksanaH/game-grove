@@ -1,46 +1,48 @@
 const typeDefs = `
     input GameInput {
+        id: ID!             
+        name: String!        
+        description: String
+        released: String    
+        background_image: String  
+        website: String     
         creators: [String]  
-        title: String!
-        description: String!
-        gameId: String!
-        image: String
-        link: String
-        }
+    }
 
     type Game {
+        id: ID!              
+        name: String!        
+        description: String
+        released: String
+        background_image: String
+        website: String
         creators: [String]
-         title: String!
-        description: String!
-        gameId: String!
-        image: String
-        link: String
-    
     }
 
     type User {
-    _id: ID!
+        _id: ID!
         username: String!
         email: String!
-        password: String!
+        password: String!  
         savedGames: [Game]
-    }   
+    }
 
     type Auth {
         token: ID!
         user: User
     }
+
     type Query {
-        getSingleUser(userId: ID, username: String): User
+        getUser(userId: ID!): User
         getAllGames: [Game]
-        getSingleGame(gameId: String!): Game
+        getGame(id: ID!): Game  
     }
 
     type Mutation {
-        createUser(username: String!, email: String!, password: String!): Auth 
-        login(email: String, password: String!): Auth
-        saveGame(gameId: String!, description: String!, title: String!, creators: [String], image: String, link: String): Game
-        deleteGame(gameId: String!): Game
+        createUser(username: String!, email: String!, password: String!): Auth
+        login(email: String!, password: String!): Auth
+        saveGame(input: GameInput!): Game
+        deleteGame(id: ID!): Game
     }
 `;
 

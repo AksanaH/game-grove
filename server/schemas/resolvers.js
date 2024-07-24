@@ -1,38 +1,45 @@
-const { User } = require("../models");
-const { signToken } = require("../utils/auth");
+const { User } = require('../models'); 
+const Game = require('../models/games'); 
+const { signToken } = require('../utils/auth');
 
 const resolvers = {
   Query: {
-    getSingleUser: async (parent, { user = null, params }) => {
-      const foundUser = await User.findOne({
-        $or: [
-          { _id: user ? user._id : params.id },
-          { username: params.username },
-        ],
-      });
+    getUser: async (parent, { userId }) => {
+      const foundUser = await User.findById(userId).populate('savedGames');
 
       if (!foundUser) {
-        throw new Error("Cannot find a user with this id!");
+        throw new Error('Cannot find a user with this id!');
       }
 
       return foundUser;
     },
+    getAllGames: async () => {
+      const games = await Game.find();
+      return games;
+    },
+    getGame: async (parent, { gameId }) => {
+      const game = await Game.findOne({ gameId });
+
+      if (!game) {
+        throw new Error('Cannot find a game with this id!');
+      }
+
+      return game;
+    },
   },
   Mutation: {
-    createUser: async (parent, args) => {
-      const user = await User.create(args);
+    createUser: async (parent, { username, email, password }) => {
+      const user = await User.create({ username, email, password });
 
       if (!user) {
-        throw new Error("Something is wrong!");
+        throw new Error('Something went wrong!');
       }
 
       const token = signToken(user);
       return { token, user };
     },
     login: async (parent, { email, password }) => {
-      const user = await User.findOne({
-        email,
-      });
+      const user = await User.findOne({ email });
 
       if (!user) {
         throw new Error("Can't find this user");
@@ -41,45 +48,56 @@ const resolvers = {
       const correctPw = await user.isCorrectPassword(password);
 
       if (!correctPw) {
-        throw new Error("Wrong password!");
+        throw new Error('Wrong password!');
       }
 
       const token = signToken(user);
       return { token, user };
     },
-    saveBook: async (parent, { user, body }) => {
-      if (!user) {
-        throw new Error("You need to be logged in!");
+    saveGame: async (parent, { input }, context) => {
+      if (!context.user) {
+        throw new Error('You need to be logged in!');
       }
 
       try {
-        const updatedUser = await User.findOneAndUpdate(
-          { _id: user._id },
-          { $addToSet: { savedBooks: body } },
+        const game = new Game(input);
+        await game.save(); 
+
+        
+        const updatedUser = await User.findByIdAndUpdate(
+          context.user._id,
+          { $addToSet: { savedGames: game } },
           { new: true, runValidators: true }
-        );
+        ).populate('savedGames');
 
         return updatedUser;
       } catch (err) {
-        throw new Error("Error saving book!");
+        throw new Error('Error saving game!');
       }
     },
-    deleteBook: async (parent, { user, params }) => {
-      if (!user) {
-        throw new Error("You need to be logged in!");
+    deleteGame: async (parent, { gameId }, context) => {
+      if (!context.user) {
+        throw new Error('You need to be logged in!');
       }
 
-      const updatedUser = await User.findOneAndUpdate(
-        { _id: user._id },
-        { $pull: { savedBooks: { bookId: params.bookId } } },
-        { new: true }
-      );
+      try {
+        
+        const deletedGame = await Game.findOneAndDelete({ gameId });
 
-      if (!updatedUser) {
-        throw new Error("Couldn't find user with this id!");
+        const updatedUser = await User.findByIdAndUpdate(
+          context.user._id,
+          { $pull: { savedGames: { gameId } } },
+          { new: true }
+        ).populate('savedGames');
+
+        if (!updatedUser) {
+          throw new Error("Couldn't find user with this id!");
+        }
+
+        return updatedUser;
+      } catch (err) {
+        throw new Error('Error deleting game!');
       }
-
-      return updatedUser;
     },
   },
 };
