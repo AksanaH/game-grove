@@ -41,6 +41,36 @@ export const SAVE_GAME = gql`
   }
 `;
 
+export const RATE_GAME = gql`
+  mutation rateGame($gameId: String!) {
+    rateGame(gameId: $gameId) {
+      savedGames {
+        creators
+        title
+        description
+        gameId
+        image
+        link
+      }
+    }
+  }
+`;
+
+export const PLAYED_GAME = gql`
+  mutation playedGame($gameId: String!) {
+    playedGame(gameId: $gameId) {
+      savedGames {
+        creators
+        title
+        description
+        gameId
+        image
+        link
+      }
+    }
+  }
+`;
+
 export const DELETE_GAME = gql`
   mutation deleteGame($gameId: String!) {
     deleteGame(gameId: $gameId) {

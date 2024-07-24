@@ -17,6 +17,7 @@ const typeDefs = `
         background_image: String
         website: String
         creators: [String]
+        rating:  Number
     }
 
     type User {
@@ -42,6 +43,8 @@ const typeDefs = `
         createUser(username: String!, email: String!, password: String!): Auth
         login(email: String!, password: String!): Auth
         saveGame(input: GameInput!): Game
+        rateGame(id: ID!): Game
+        playedGame(id: ID!): Game
         deleteGame(id: ID!): Game
     }
 `;
