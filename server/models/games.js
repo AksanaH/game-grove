@@ -1,5 +1,4 @@
-const { Schema } = require('mongoose');
-
+const { Schema } = require("mongoose");
 
 const gameSchema = new Schema({
   id: {
@@ -11,20 +10,23 @@ const gameSchema = new Schema({
     required: true,
   },
   released: {
-    type: String, 
+    type: String,
   },
   rating: {
-    type: Number, 
+    type: Number,
+  },
+  rating: {
+    type: Number,
   },
   description: {
     type: String,
     required: true,
   },
   background_image: {
-    type: String, 
+    type: String,
   },
   website: {
-    type: String, 
+    type: String,
   },
 });
 
