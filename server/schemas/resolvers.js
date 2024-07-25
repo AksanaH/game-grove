@@ -1,5 +1,5 @@
 const { User } = require("../models");
-const Game = require("../models/games");
+const Game = require("../models/Games");
 const { signToken } = require("../utils/auth");
 
 const resolvers = {

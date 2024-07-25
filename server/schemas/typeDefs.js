@@ -17,7 +17,7 @@ const typeDefs = `
         background_image: String
         website: String
         creators: [String]
-        rating:  Number
+        rating:  Float
     }
 
     type User {
