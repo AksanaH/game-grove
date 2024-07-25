@@ -74,6 +74,7 @@ const resolvers = {
         throw new Error("Error saving game!");
       }
     },
+
     deleteGame: async (parent, { gameId }, context) => {
       if (!context.user) {
         throw new Error("You need to be logged in!");
@@ -95,6 +96,54 @@ const resolvers = {
         return updatedUser;
       } catch (err) {
         throw new Error("Error deleting game!");
+      }
+    },
+
+    rateGame: async (parent, { gameId, rating }, context) => {
+      if (!context.user) {
+        throw new Error("You need to be logged in!");
+      }
+
+      try {
+        const game = await Game.findOne({ gameId });
+        if (!game) {
+          throw new Error("Game not found!");
+        }
+
+        game.rating = rating;
+        await game.save();
+
+        const updatedUser = await User.findById(context.user._id).populate(
+          "savedGames"
+        );
+
+        return updatedUser;
+      } catch (err) {
+        throw new Error("Error rating game!");
+      }
+    },
+
+    playedGame: async (parent, { gameId }, context) => {
+      if (!context.user) {
+        throw new Error("You need to be logged in!");
+      }
+
+      try {
+        const game = await Game.findOne({ gameId });
+        if (!game) {
+          throw new Error("Game not found!");
+        }
+
+        game.played = true;
+        await game.save();
+
+        const updatedUser = await User.findById(context.user._id).populate(
+          "savedGames"
+        );
+
+        return updatedUser;
+      } catch (err) {
+        throw new Error("Error marking game as played!");
       }
     },
   },
