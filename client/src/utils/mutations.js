@@ -85,32 +85,3 @@ export const DELETE_GAME = gql`
     }
   }
 `;
-export const RATE_GAME = gql`
-  mutation rateGame($gameId: String!, $rating: Float!) {
-    rateGame(gameId: $gameId, rating: $rating) {
-      savedGames {
-        creators
-        title
-        description
-        gameId
-        image
-        link
-      }
-    }
-  }
-`;
-
-export const PLAYED_GAME = gql`
-  mutation playedGame($gameId: String!) {
-    playedGame(gameId: $gameId) {
-      savedGames {
-        creators
-        title
-        description
-        gameId
-        image
-        link
-      }
-    }
-  }
-`;
