@@ -1,35 +1,46 @@
 [
   {
-    "name": "Stray"
+    "name": "Stray",
+    "description" :"1"
   },
   {
-    "name": "Last of Us"
+    "name": "Last of Us",
+    "description" :"2"
   },
   {
-    "name": "Elden Ring"
+    "name": "Elden Ring",
+    "description" :"3"
   },
   {
-    "name": "Skyrim"
+    "name": "Skyrim",
+    "description" :"4"
   },
   {
-    "name": "Spiderman"
+    "name": "Spiderman",
+    "description" :"5"
   },
   {
-    "name": "Bioshock"
+    "name": "Bioshock",
+    "description" :"6"
   },
   {
-    "name": "Einhander"
+    "name": "Einhander",
+    "description" :"7"
   },
   {
-    "name": "Tomb Raider"
+    "name": "Tomb Raider",
+    "description" :"8"
   },
   {
-    "name": "Call of Duty"
+    "name": "Call of Duty",
+    "description" :"9"
   },
   {
-    "name": "Mario Party"
+    "name": "Mario Party",
+    "description" :"10"
   },
   {
-    "name": "Lego Batman"
+    "name": "Lego Batman",
+    "description" :"11"
   }
 ]

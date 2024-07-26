@@ -1,8 +1,10 @@
 const db = require("../config/connection");
-const { games, User } = require("../models");
+const { Game, User } = require("../models");
 const cleanDB = require("./cleanDB");
 
 const gameData = require("./gameData.json");
+const userSeeds = require("./userSeeds.json");
+
 
 db.once("open", async () => {
   await cleanDB("Game", "games");
@@ -11,7 +13,7 @@ db.once("open", async () => {
 
   await User.create(userSeeds);
 
-  await games.insertMany(gameData);
+  await Game.insertMany(gameData);
 
   console.log("Games seeded!");
   process.exit(0);
