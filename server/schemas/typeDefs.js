@@ -1,8 +1,8 @@
 const typeDefs = `
     input GameInput {
-        id: ID!             
+        id: String!             
         name: String!        
-        description: String
+        description: String!
         released: String    
         background_image: String  
         website: String     
@@ -10,13 +10,15 @@ const typeDefs = `
     }
 
     type Game {
-        id: ID!              
+        id: String!              
         name: String!        
-        description: String
+        description: String!
         released: String
         background_image: String
         website: String
         creators: [String]
+        rating: Float
+        played: Boolean!
     }
 
     type User {
@@ -41,8 +43,10 @@ const typeDefs = `
     type Mutation {
         createUser(username: String!, email: String!, password: String!): Auth
         login(email: String!, password: String!): Auth
-        saveGame(input: GameInput!): Game
-        deleteGame(id: ID!): Game
+        saveGame(gameData: GameInput!): User
+        rateGame(gameId: String!, rating: Float!): User
+        playedGame(gameId: String!): User
+        deleteGame(gameId: String!): User
     }
 `;
 

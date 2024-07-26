@@ -14,7 +14,7 @@ export const CREATE_USER = gql`
 `;
 
 export const USER_LOGIN = gql`
-  mutation login($email: String, $password: String!) {
+  mutation login($email: String!, $password: String!) {
     login(email: $email, password: $password) {
       token
       user {
@@ -29,6 +29,36 @@ export const USER_LOGIN = gql`
 export const SAVE_GAME = gql`
   mutation saveGame($gameData: GameInput!) {
     saveGame(gameData: $gameData) {
+      savedGames {
+        creators
+        title
+        description
+        gameId
+        image
+        link
+      }
+    }
+  }
+`;
+
+export const RATE_GAME = gql`
+  mutation rateGame($gameId: String!) {
+    rateGame(gameId: $gameId) {
+      savedGames {
+        creators
+        title
+        description
+        gameId
+        image
+        link
+      }
+    }
+  }
+`;
+
+export const PLAYED_GAME = gql`
+  mutation playedGame($gameId: String!) {
+    playedGame(gameId: $gameId) {
       savedGames {
         creators
         title
