@@ -11,9 +11,6 @@ const gameSchema = new Schema({
   rating: {
     type: Number,
   },
-  rating: {
-    type: Number,
-  },
   description: {
     type: String,
     required: true,
@@ -21,8 +18,10 @@ const gameSchema = new Schema({
   background_image: {
     type: String,
   },
-  website: {
-    type: String,
+  creators: [String],
+  played: {
+    type: Boolean,
+    default: false,
   },
 });
 
