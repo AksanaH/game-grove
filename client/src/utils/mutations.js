@@ -6,8 +6,9 @@ export const CREATE_USER = gql`
       token
       user {
         _id
-        username
         email
+        password
+        username
       }
     }
   }
@@ -29,28 +30,42 @@ export const USER_LOGIN = gql`
 export const SAVE_GAME = gql`
   mutation saveGame($gameData: GameInput!) {
     saveGame(gameData: $gameData) {
+      username
+      password
+      email
+      _id
       savedGames {
         creators
-        title
         description
-        gameId
+        id
         image
-        link
+        name
+        played
+        rating
+        released
+        website
       }
     }
   }
 `;
 
 export const RATE_GAME = gql`
-  mutation rateGame($gameId: String!) {
-    rateGame(gameId: $gameId) {
+  mutation rateGame($gameId: String!, $rating: Float!) {
+    rateGame(gameId: $gameId, rating: $rating) {
+      username
+      password
+      email
+      _id
       savedGames {
         creators
-        title
         description
-        gameId
+        id
         image
-        link
+        name
+        played
+        rating
+        released
+        website
       }
     }
   }
@@ -59,13 +74,20 @@ export const RATE_GAME = gql`
 export const PLAYED_GAME = gql`
   mutation playedGame($gameId: String!) {
     playedGame(gameId: $gameId) {
+      username
+      password
+      email
+      _id
       savedGames {
-        creators
-        title
-        description
-        gameId
+        website
+        released
+        rating
+        played
+        name
         image
-        link
+        id
+        description
+        creators
       }
     }
   }
@@ -74,13 +96,20 @@ export const PLAYED_GAME = gql`
 export const DELETE_GAME = gql`
   mutation deleteGame($gameId: String!) {
     deleteGame(gameId: $gameId) {
+      username
+      password
+      email
+      _id
       savedGames {
-        creators
-        title
-        description
-        gameId
+        website
+        released
+        rating
+        played
+        name
         image
-        link
+        id
+        description
+        creators
       }
     }
   }

@@ -18,6 +18,7 @@
     "concurrently": "^8.2.0"
   },
   "dependencies": {
+    "@ant-design/icons": "^5.4.0",
     "axios": "^1.7.2"
   }
 }
