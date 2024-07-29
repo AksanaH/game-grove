@@ -5,6 +5,12 @@ const { signToken } = require("../utils/auth");
 const resolvers = {
   Query: {
     getUser: async (parent, { userId }) => {
+      try {
+        console.log("==============QUERY GET USER============");
+        return User.find();
+      } catch (err) {
+        console.log(err);
+      }
       const foundUser = await User.findById(userId).populate("savedGames");
 
       if (!foundUser) {
@@ -14,10 +20,22 @@ const resolvers = {
       return foundUser;
     },
     getAllGames: async () => {
+      try {
+        console.log("==============QUERY GET ALL GAMES==============");
+        return User.find();
+      } catch (err) {
+        console.log(err);
+      }
       const games = await Game.find();
       return games;
     },
     getGame: async (parent, { gameId }) => {
+      try {
+        console.log("==============QUERY GET GAME==============");
+        return User.find();
+      } catch (err) {
+        console.log(err);
+      }
       const game = await Game.findOne({ gameId });
 
       if (!game) {
@@ -29,6 +47,12 @@ const resolvers = {
   },
   Mutation: {
     createUser: async (parent, { username, email, password }) => {
+      try {
+        console.log("=============MUTATION CREATE USER==============");
+        return User.find();
+      } catch (err) {
+        console.log(err);
+      }
       const user = await User.create({ username, email, password });
 
       if (!user) {
@@ -39,6 +63,12 @@ const resolvers = {
       return { token, user };
     },
     login: async (parent, { email, password }) => {
+      try {
+        console.log("==============MUTATION LOGIN==============");
+        return User.find();
+      } catch (err) {
+        console.log(err);
+      }
       const user = await User.findOne({ email });
 
       if (!user) {
@@ -55,6 +85,12 @@ const resolvers = {
       return { token, user };
     },
     saveGame: async (parent, { input }, context) => {
+      try {
+        console.log("==============MUTATION SAVE GAME=============");
+        return User.find();
+      } catch (err) {
+        console.log(err);
+      }
       if (!context.user) {
         throw new Error("You need to be logged in!");
       }
@@ -76,6 +112,12 @@ const resolvers = {
     },
 
     deleteGame: async (parent, { gameId }, context) => {
+      try {
+        console.log("===========MUTATION DELETE GAME===========");
+        return User.find();
+      } catch (err) {
+        console.log(err);
+      }
       if (!context.user) {
         throw new Error("You need to be logged in!");
       }
@@ -100,6 +142,12 @@ const resolvers = {
     },
 
     rateGame: async (parent, { gameId, rating }, context) => {
+      try {
+        console.log("============RATE GAME==========");
+        return User.find();
+      } catch (err) {
+        console.log(err);
+      }
       if (!context.user) {
         throw new Error("You need to be logged in!");
       }
@@ -124,6 +172,12 @@ const resolvers = {
     },
 
     playedGame: async (parent, { gameId }, context) => {
+      try {
+        console.log("=============MUTATOIN PLAYED GAME=========");
+        return User.find();
+      } catch (err) {
+        console.log(err);
+      }
       if (!context.user) {
         throw new Error("You need to be logged in!");
       }

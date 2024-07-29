@@ -1,51 +1,55 @@
-import { gql } from '@apollo/client';
-
+import { gql } from "@apollo/client";
 
 export const SINGLE_USER = gql`
-  query getSingleUser($userId: ID, $username: String) {
-    getSingleUser(userId: $userId, username: $username) {
+  query getUser($userId: ID!) {
+    getUser(userId: $userId) {
       _id
       username
       email
+      password
       savedGames {
-        id
-        name
+        website
         released
         rating
+        played
+        name
+        image
+        id
         description
-        background_image
-        website
+        creators
       }
     }
   }
 `;
 
-
 export const ALL_GAMES = gql`
-  query getAllGames($query: String) {
-    getAllGames(query: $query) {
-      id
-      name
+  query getAllGames {
+    getAllGames {
+      website
       released
       rating
+      played
+      name
+      image
+      id
       description
-      background_image
-      website
+      creators
     }
   }
 `;
 
-
 export const SINGLE_GAME = gql`
-  query getSingleGame($gameId: String!) {
-    getSingleGame(gameId: $gameId) {
-      id
-      name
+  query getGame($getGameId: ID!) {
+    getGame(id: $getGameId) {
+      website
       released
       rating
+      played
+      name
+      image
+      id
       description
-      background_image
-      website
+      creators
     }
   }
 `;
