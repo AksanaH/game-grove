@@ -1,6 +1,6 @@
 import { Col, Divider, Row } from "antd";
 import { Link } from "react-router-dom";
-import "./Header.css";
+import "./Navbar.css";
 const Navbar = () => {
   return (
     <Row justify="end" className="header" align="middle">

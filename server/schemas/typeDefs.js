@@ -4,7 +4,7 @@ const typeDefs = `
         name: String!        
         description: String!
         released: String    
-        background_image: String  
+        image: String  
         website: String     
         creators: [String]  
     }
@@ -14,7 +14,7 @@ const typeDefs = `
         name: String!        
         description: String!
         released: String
-        background_image: String
+        image: String
         website: String
         creators: [String]
         rating: Float

@@ -18,8 +18,13 @@
     "concurrently": "^8.2.0"
   },
   "dependencies": {
+
     "apollo-server-express": "^3.13.0",
     "axios": "^1.7.2",
     "graphql-upload": "^15.0.0"
+
+    "@ant-design/icons": "^5.4.0",
+
+
   }
 }
