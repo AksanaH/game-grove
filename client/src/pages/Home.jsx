@@ -27,34 +27,9 @@ export default function Home() {
       description: "Description for item 5",
       image: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png",
     },
-    {
-      title: "Item 6",
-      description: "Description for item 6",
-      image: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png",
-    },
-    {
-      title: "Item 7",
-      description: "Description for item 7",
-      image: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png",
-    },
-    {
-      title: "Item 8",
-      description: "Description for item 8",
-      image: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png",
-    },
-    {
-      title: "Item 9",
-      description: "Description for item 9",
-      image: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png",
-    },
-    {
-      title: "Item 10",
-      description: "Description for item 10",
-      image: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png",
-    },
   ];
   return (
-    <div>
+    <div className="homepage-container">
       <h1>Welcome Gamers!</h1>
       <Row gutter={[6, 32]}>
         {items.map((item, index) => (
