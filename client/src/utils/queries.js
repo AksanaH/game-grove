@@ -1,12 +1,13 @@
 import { gql } from "@apollo/client";
 
 export const SINGLE_USER = gql`
-  query getUser($userId: ID!) {
-    getUser(userId: $userId) {
+  query getUser {
+    getUser {
       _id
       username
       email
       password
+      bio
       savedGames {
         website
         released

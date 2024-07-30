@@ -4,14 +4,9 @@ const { signToken } = require("../utils/auth");
 
 const resolvers = {
   Query: {
-    getUser: async (parent, { userId }) => {
-      try {
-        console.log("==============QUERY GET USER============");
-        return User.find();
-      } catch (err) {
-        console.log(err);
-      }
-      const foundUser = await User.findById(userId).populate("savedGames");
+    getUser: async (parent, { }, context) => {
+
+      const foundUser = await User.findById(context.user._id);
 
       if (!foundUser) {
         throw new Error("Cannot find a user with this id!");
@@ -184,17 +179,19 @@ const resolvers = {
         throw new Error("Error marking game as played!");
       }
     },
-      uploadFile: ({ file }) => {
-    // Handle file upload logic here
-    return `File ${file.filename} uploaded successfully.`;
+    uploadFile: ({ file }) => {
+      // Handle file upload logic here
+      return `File ${file.filename} uploaded successfully.`;
+    },
+    updateUserBio: async (parent, { bio }, context) => {
+      // Update the user bio in the database
+
+      if (!context.user) throw new Error('Not authenticated');
+
+      const updatedUser = await User.findByIdAndUpdate(context.user._id, { bio }, { new: true });
+      return updatedUser;
+    },
   },
-     updateUserBio: async (_, { bio }, { user }) => {
-    // Update the user bio in the database
-    if (!user) throw new Error('Not authenticated');
-    const updatedUser = await User.findByIdAndUpdate(user._id, { bio }, { new: true });
-    return updatedUser;
-  },
-},
 };
 
 module.exports = resolvers;

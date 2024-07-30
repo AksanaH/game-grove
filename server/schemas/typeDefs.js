@@ -27,6 +27,7 @@ const typeDefs = `
         email: String!
         password: String!  
         savedGames: [Game]
+        bio: String
     }
 
     type Auth {
@@ -35,7 +36,7 @@ const typeDefs = `
     }
 
     type Query {
-        getUser(userId: ID!): User
+        getUser: User!
         getAllGames: [Game]
         getGame(id: ID!): Game  
     }
