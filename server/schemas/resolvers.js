@@ -46,29 +46,13 @@ const resolvers = {
     },
   },
   Mutation: {
-    createUser: async (parent, { username, email, password }) => {
-      try {
-        console.log("=============MUTATION CREATE USER==============");
-        return User.find();
-      } catch (err) {
-        console.log(err);
-      }
-      const user = await User.create({ username, email, password });
-
-      if (!user) {
-        throw new Error("Something went wrong!");
-      }
+    createUser: async (parent, args) => {
+      const user = await User.create(args);
 
       const token = signToken(user);
       return { token, user };
     },
     login: async (parent, { email, password }) => {
-      try {
-        console.log("==============MUTATION LOGIN==============");
-        return User.find();
-      } catch (err) {
-        console.log(err);
-      }
       const user = await User.findOne({ email });
 
       if (!user) {
