@@ -29,3 +29,6 @@
   background-image: url("../public/images/background.jpg");
   background-size: cover;
 }
+body {
+  background-image: url("../public/images/background.jpg");
+}
