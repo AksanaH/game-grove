@@ -14,6 +14,7 @@
     "antd": "^5.19.3",
     "apollo-server": "^3.13.0",
     "graphql": "^16.9.0",
+    "http-proxy-middleware": "^3.0.0",
     "jwt-decode": "^3.1.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -28,5 +29,6 @@
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.7",
     "vite": "^5.3.1"
-  }
+  },
+  "proxy": "https://660d2bd96ddfa2943b33731c.mockapi.io"
 }

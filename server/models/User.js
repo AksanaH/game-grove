@@ -21,8 +21,12 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
+    bio: {
+      type: String,
+      default: "",
+    },
     // set savedBooks to be an array of data that adheres to the bookSchema
-    savedGames: [ {
+    savedGames: [{
       type: Schema.Types.ObjectId,
       ref: 'gameSchema',
     },],
