@@ -29,3 +29,27 @@
   background-image: url("../public/images/background.jpg");
   background-size: cover;
 }
+
+.ant-upload {
+  background-color: white;
+  border-radius: 50%;
+}
+
+.bio-text {
+  background-color: white;
+  border-radius: 3px;
+  height: 30px;
+  align-content: center;
+  padding: 0 5px;
+}
+
+.profile {
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+
+}
+
+.avatar-uploader {
+  margin: 50px;
+}

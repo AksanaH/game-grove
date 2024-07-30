@@ -7,6 +7,7 @@ import Login from "./components/Login.jsx";
 import Home from "./pages/Home.jsx";
 import Signup from "./components/Signup.jsx";
 import SavedGames from "./pages/SavedGames.jsx";
+import Profile from "./pages/Profile.jsx";
 
 const router = createBrowserRouter([
   {

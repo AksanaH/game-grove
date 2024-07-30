@@ -124,7 +124,6 @@ export const UPLOAD_IMAGE = gql`
 export const UPDATE_USER_BIO = gql`
   mutation UpdateUserBio($bio: String!) {
     updateUserBio(bio: $bio) {
-      id
       bio
     }
   }
