@@ -1,4 +1,4 @@
-import React from "react";
+
 import { Button, Form, Input } from "antd";
 import { useMutation } from "@apollo/client";
 import { CREATE_USER } from "../utils/mutations";

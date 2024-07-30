@@ -47,7 +47,11 @@ const typeDefs = `
         rateGame(gameId: String!, rating: Float!): User
         playedGame(gameId: String!): User
         deleteGame(gameId: String!): User
+        uploadFile(file: Upload!): String
+        updateUserBio(bio: String!): User
     }
+    scalar Upload
+
 `;
 
 module.exports = typeDefs;

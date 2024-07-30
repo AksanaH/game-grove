@@ -200,7 +200,17 @@ const resolvers = {
         throw new Error("Error marking game as played!");
       }
     },
+      uploadFile: ({ file }) => {
+    // Handle file upload logic here
+    return `File ${file.filename} uploaded successfully.`;
   },
+     updateUserBio: async (_, { bio }, { user }) => {
+    // Update the user bio in the database
+    if (!user) throw new Error('Not authenticated');
+    const updatedUser = await User.findByIdAndUpdate(user._id, { bio }, { new: true });
+    return updatedUser;
+  },
+},
 };
 
 module.exports = resolvers;
