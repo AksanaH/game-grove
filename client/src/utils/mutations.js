@@ -53,8 +53,6 @@ export const RATE_GAME = gql`
   mutation rateGame($gameId: String!, $rating: Float!) {
     rateGame(gameId: $gameId, rating: $rating) {
       username
-      password
-      email
       _id
       savedGames {
         creators
@@ -75,8 +73,6 @@ export const PLAYED_GAME = gql`
   mutation playedGame($gameId: String!) {
     playedGame(gameId: $gameId) {
       username
-      password
-      email
       _id
       savedGames {
         website
@@ -97,8 +93,6 @@ export const DELETE_GAME = gql`
   mutation deleteGame($gameId: String!) {
     deleteGame(gameId: $gameId) {
       username
-      password
-      email
       _id
       savedGames {
         website

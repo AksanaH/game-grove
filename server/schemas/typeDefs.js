@@ -45,9 +45,9 @@ const typeDefs = `
         createUser(username: String!, email: String!, password: String!): Auth
         login(email: String!, password: String!): Auth
         saveGame(gameData: GameInput!): User
-        rateGame(gameId: String!, rating: Float!): User
-        playedGame(gameId: String!): User
-        deleteGame(gameId: String!): User
+        rateGame(gameId: ID!, rating: Float!): User
+        playedGame(gameId: ID!): User
+        deleteGame(gameId: ID!): User
         uploadFile(file: Upload!): String
         updateUserBio(bio: String!): User
     }
