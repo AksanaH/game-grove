@@ -15,14 +15,12 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "concurrently": "^8.2.0"
+    "concurrently": "^8.2.2"
   },
   "dependencies": {
-
     "apollo-server-express": "^3.13.0",
     "axios": "^1.7.2",
-    "graphql-upload": "^15.0.0"
-
-
+    "graphql-upload": "^16.0.2",
+    "whatwg-url": "^14.0.0"
   }
 }

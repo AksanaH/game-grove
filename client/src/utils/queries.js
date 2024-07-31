@@ -6,18 +6,16 @@ export const SINGLE_USER = gql`
       _id
       username
       email
-      password
-      bio
       savedGames {
-        website
-        released
-        rating
-        played
-        name
-        image
         id
+        name
         description
+        image
+        rating
+        released
+        website
         creators
+        played
       }
     }
   }

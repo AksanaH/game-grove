@@ -50,66 +50,43 @@ export const SAVE_GAME = gql`
 `;
 
 export const RATE_GAME = gql`
-  mutation rateGame($gameId: String!, $rating: Float!) {
+  mutation rateGame($gameId: ID!, $rating: Float!) {
     rateGame(gameId: $gameId, rating: $rating) {
       username
-      password
-      email
       _id
+      username
       savedGames {
-        creators
-        description
         id
-        image
         name
-        played
         rating
-        released
-        website
       }
     }
   }
 `;
 
 export const PLAYED_GAME = gql`
-  mutation playedGame($gameId: String!) {
+  mutation playedGame($gameId: ID!) {
     playedGame(gameId: $gameId) {
       username
-      password
-      email
       _id
       savedGames {
-        website
-        released
-        rating
         played
         name
-        image
         id
-        description
-        creators
       }
     }
   }
 `;
 
 export const DELETE_GAME = gql`
-  mutation deleteGame($gameId: String!) {
+  mutation deleteGame($gameId: ID!) {
     deleteGame(gameId: $gameId) {
       username
-      password
-      email
       _id
       savedGames {
-        website
-        released
-        rating
-        played
-        name
-        image
         id
         description
-        creators
+        nams
       }
     }
   }

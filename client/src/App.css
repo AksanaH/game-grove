@@ -30,6 +30,26 @@
   background-size: cover;
 }
 
+
+
+.container{
+  max-width: 1000px;
+  padding: 20px;
+  background-color: rgba(70, 83, 48, 0.7);
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  
+}
+
+.container {
+  margin-bottom: 20px; /* Add spacing between each container */
+}
+
+body {
+  background-image: url("./images/background.jpg");
+  background-size: cover;
+  background-attachment: fixed;
+}
 .ant-upload {
   background-color: white;
   border-radius: 50%;
@@ -47,7 +67,6 @@
   display: flex;
   justify-content: flex-start;
   flex-direction: column;
-
 }
 
 .avatar-uploader {
@@ -58,6 +77,65 @@
   font-family: "Lucida Console", "Courier New", monospace;
   font-style: italic;
   font-size: 20px;
-  color:bisque;
+  color: bisque;
   font-weight: bold;
+}
+
+.anticon {
+  font-size: 1rem;
+}
+
+@media screen and (max-width: 992px) {
+  .tabs-btn {
+    font-size: 14px;
+    padding: 4px 6px;
+  }
+}
+@media (max-width: 768px) {
+  .tabs-container .ant-tabs {
+    width: 80%;
+  }
+  .tabs-btn {
+    font-size: 12px;
+    padding: 4px 6px;
+  }
+  .ant-tabs .ant-tabs-content {
+    width: 45%;
+  }
+
+  .ant-card-meta-description {
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .tabs-container .ant-tabs {
+    font-size: 0.9rem;
+  }
+
+  .tabs-btn {
+    font-size: 0.8rem;
+    padding: 1px;
+  }
+  .ant-tabs .ant-tabs-content {
+    width: 40%;
+  }
+
+  .ant-card-meta-description {
+    font-size: 0.6rem;
+  }
+  .anticon {
+    font-size: 0.8rem;
+  }
+}
+
+.text-center {
+  text-align: center;
+  color: white;
+}
+
+.content {
+  padding-left: 150px;
+  padding-right: 150px;
+  margin-top: 80px;
 }
