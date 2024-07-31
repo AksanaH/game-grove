@@ -1,18 +1,23 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button, message, Upload } from "antd";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import { useMutation } from "@apollo/client";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import { UPLOAD_IMAGE } from "../utils/mutations";
 import Bio from "../components/Bio";
 import Auth from "../utils/auth";
+
 const Avatar = () => {
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState();
   const [uploadFile] = useMutation(UPLOAD_IMAGE);
+  const navigate = useNavigate(); // Initialize useNavigate
 
-  if (!Auth.loggedIn()) {
-    return <p>You need to be logged in to update your bio.</p>;
-  }
+  useEffect(() => {
+    if (!Auth.loggedIn()) {
+      navigate("/"); // Redirect to home if not logged in
+    }
+  }, []);
 
   const handleChange = async (info) => {
     if (info.file.status === "uploading") {
@@ -50,7 +55,8 @@ const Avatar = () => {
     </Button>
   );
 
-  return (
+  // Conditionally render the profile content if the user is logged in
+  return Auth.loggedIn() ? (
     <div className="background tabs-container ">
       <Upload
         name="avatar"
@@ -91,7 +97,7 @@ const Avatar = () => {
       </Upload>
       <Bio />
     </div>
-  );
+  ) : null; // Return null or a loading indicator if not logged in
 };
 
 export default Avatar;
