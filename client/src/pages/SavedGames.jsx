@@ -83,24 +83,48 @@ const SavedGames = () => {
         />
       }
       actions={[
-        <CheckSquareFilled
-          key="check"
-          onClick={() => handlePlayedGame(game.gameId)}
-        />,
-        <DeleteFilled
-          key="delete"
-          onClick={() => handleDeleteGame(game.gameId)}
-        />,
-        <Rate
-          key="rate"
-          onChange={(value) => handleRateGame(game.gameId, value)}
-        />,
+        <div
+          key="actions"
+          style={{
+            display: "flex",
+            justifyContent: "space-evenly",
+            alignItems: "center",
+          }}
+        >
+          <CheckSquareFilled
+            key="check"
+            onClick={() => handlePlayedGame(game.gameId)}
+          />
+          |
+          <Rate
+            key="rate"
+            onChange={(value) => handleRateGame(game.gameId, value)}
+          />
+        </div>,
       ]}
     >
-      <Meta title={game.title} description={game.description} />
+      <Meta
+        title={game.title}
+        description={
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <span>{game.description}</span>
+            <div style={{ display: "flex", gap: "10px" }}>
+              <DeleteFilled
+                key="delete"
+                onClick={() => handleDeleteGame(game.gameId)}
+              />
+            </div>
+          </div>
+        }
+      />
     </Card>
   );
-
   return (
     <>
       <Layout>
