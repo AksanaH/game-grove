@@ -53,7 +53,10 @@ const resolvers = {
       return { token, user };
     },
     saveGame: async (parent, { gameData }, context) => {
-      if (!context.user) throw new Error("Not authenticated");
+      if (!context.user) {
+        throw new Error("You need to be logged in!");
+      }
+
       try {
         const updatedUser = await User.findByIdAndUpdate(
           { _id: context.user._id },
@@ -76,7 +79,7 @@ const resolvers = {
         const deletedGame = await Game.findOneAndDelete({ _id: gameId });
 
         const updatedUser = await User.findByIdAndUpdate(
-          { _id: context.user._id },
+          context.user._id,
           { $pull: { savedGames: { _id: gameId } } },
           { new: true }
         ).populate("savedGames");
@@ -121,7 +124,7 @@ const resolvers = {
       }
 
       try {
-        const game = await Game.findOne({ gameId });
+        const game = await Game.findOne({ _id: gameId });
         if (!game) {
           throw new Error("Game not found!");
         }
