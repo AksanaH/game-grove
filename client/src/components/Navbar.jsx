@@ -21,6 +21,9 @@ const Navbar = () => {
 
   return (
     <Row justify="end" className="header" align="middle">
+      <Col span={2} pull={13}>
+        <img src="./images/gamecue-transparent.png" alt="" style={{width: "50px", height: "50px"}}/>
+      </Col>
       <Col span={2}>
         <Link className="navlink" to="/">
           Games
