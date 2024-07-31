@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Card, Tabs, Rate, Layout } from "antd";
+import { Card, Tabs, Rate, Layout, Spin, Alert } from "antd";
 import { DeleteFilled, CheckSquareFilled } from "@ant-design/icons";
 import "../App.css";
 import Auth from "../utils/auth";
@@ -9,18 +9,20 @@ import { useMutation, useQuery } from "@apollo/client";
 import { SINGLE_USER } from "../utils/queries";
 const { Meta } = Card;
 
-const TabName = ({ item }) => {
-  return <h1 className="tabs-btn">{item.title}</h1>;
-};
-const data = [
+const tabData = [
   { id: 1, title: "Saved Games", description: "game1" },
   { id: 2, title: "Played Games", description: "game2" },
   { id: 3, title: "Recently Deleted Games", description: "game3" },
 ];
 
+const TabName = ({ item }) => {
+  return <h1 className="tabs-btn">{item.title}</h1>;
+};
+
+
 const SavedGames = () => {
   const [tabPosition] = useState("left");
-  // const { loading, data } = useQuery(SINGLE_USER);
+  const { loading, data } = useQuery(SINGLE_USER);
   const [deleteGame, { error }] = useMutation(DELETE_GAME);
   const [rateGame] = useMutation(RATE_GAME);
   const [playedGame] = useMutation(PLAYED_GAME);
@@ -125,6 +127,12 @@ const SavedGames = () => {
       />
     </Card>
   );
+
+  if (loading) return <Spin size="large" />;
+  if (error) return <Alert message="Error loading data" type="error" />;
+
+  const gamesData = userData.games || [];
+
   return (
     <>
       <Layout>
@@ -132,7 +140,7 @@ const SavedGames = () => {
           <div className="tabs-container">
             <Tabs
               tabPosition={tabPosition}
-              items={data.map((item, i) => {
+              items={tabData.map((item, i) => {
                 const id = String(i + 1);
                 return {
                   label: <TabName item={item} />,
