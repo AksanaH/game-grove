@@ -4,39 +4,24 @@ const { signToken } = require("../utils/auth");
 
 const resolvers = {
   Query: {
-    getUser: async (parent, { userId }) => {
-      try {
-        console.log("==============QUERY GET USER============");
-        return User.find();
-      } catch (err) {
-        console.log(err);
-      }
-      const foundUser = await User.findById(userId).populate("savedGames");
+    getUser: async (parent, args, context) => {
+      if (!context.user) throw new Error("Not authenticated");
+      const userData = await User.findOne({ _id: context.user._id })
+        .select("-__v -password")
+        .populate("savedGames");
 
-      if (!foundUser) {
+      if (!userData) {
         throw new Error("Cannot find a user with this id!");
       }
 
-      return foundUser;
+      return userData;
     },
     getAllGames: async () => {
-      try {
-        console.log("==============QUERY GET ALL GAMES==============");
-        return User.find();
-      } catch (err) {
-        console.log(err);
-      }
       const games = await Game.find();
       return games;
     },
-    getGame: async (parent, { gameId }) => {
-      try {
-        console.log("==============QUERY GET GAME==============");
-        return User.find();
-      } catch (err) {
-        console.log(err);
-      }
-      const game = await Game.findOne({ gameId });
+    getGame: async (parent, { id }) => {
+      const game = await Game.findOne({ _id: id });
 
       if (!game) {
         throw new Error("Cannot find a game with this id!");
@@ -46,29 +31,12 @@ const resolvers = {
     },
   },
   Mutation: {
-    createUser: async (parent, { username, email, password }) => {
-      try {
-        console.log("=============MUTATION CREATE USER==============");
-        return User.find();
-      } catch (err) {
-        console.log(err);
-      }
-      const user = await User.create({ username, email, password });
-
-      if (!user) {
-        throw new Error("Something went wrong!");
-      }
-
+    createUser: async (parent, args) => {
+      const user = await User.create(args);
       const token = signToken(user);
       return { token, user };
     },
     login: async (parent, { email, password }) => {
-      try {
-        console.log("==============MUTATION LOGIN==============");
-        return User.find();
-      } catch (err) {
-        console.log(err);
-      }
       const user = await User.findOne({ email });
 
       if (!user) {
@@ -84,24 +52,12 @@ const resolvers = {
       const token = signToken(user);
       return { token, user };
     },
-    saveGame: async (parent, { input }, context) => {
+    saveGame: async (parent, { gameData }, context) => {
+      if (!context.user) throw new Error("Not authenticated");
       try {
-        console.log("==============MUTATION SAVE GAME=============");
-        return User.find();
-      } catch (err) {
-        console.log(err);
-      }
-      if (!context.user) {
-        throw new Error("You need to be logged in!");
-      }
-
-      try {
-        const game = new Game(input);
-        await game.save();
-
         const updatedUser = await User.findByIdAndUpdate(
-          context.user._id,
-          { $addToSet: { savedGames: game } },
+          { _id: context.user._id },
+          { $addToSet: { savedGames: gameData } },
           { new: true, runValidators: true }
         ).populate("savedGames");
 
@@ -112,22 +68,16 @@ const resolvers = {
     },
 
     deleteGame: async (parent, { gameId }, context) => {
-      try {
-        console.log("===========MUTATION DELETE GAME===========");
-        return User.find();
-      } catch (err) {
-        console.log(err);
-      }
       if (!context.user) {
         throw new Error("You need to be logged in!");
       }
 
       try {
-        const deletedGame = await Game.findOneAndDelete({ gameId });
+        const deletedGame = await Game.findOneAndDelete({ _id: gameId });
 
         const updatedUser = await User.findByIdAndUpdate(
-          context.user._id,
-          { $pull: { savedGames: { gameId } } },
+          { _id: context.user._id },
+          { $pull: { savedGames: { _id: gameId } } },
           { new: true }
         ).populate("savedGames");
 
@@ -142,18 +92,12 @@ const resolvers = {
     },
 
     rateGame: async (parent, { gameId, rating }, context) => {
-      try {
-        console.log("============RATE GAME==========");
-        return User.find();
-      } catch (err) {
-        console.log(err);
-      }
       if (!context.user) {
         throw new Error("You need to be logged in!");
       }
 
       try {
-        const game = await Game.findOne({ gameId });
+        const game = await Game.findOne({ _id: gameId });
         if (!game) {
           throw new Error("Game not found!");
         }
@@ -172,12 +116,6 @@ const resolvers = {
     },
 
     playedGame: async (parent, { gameId }, context) => {
-      try {
-        console.log("=============MUTATOIN PLAYED GAME=========");
-        return User.find();
-      } catch (err) {
-        console.log(err);
-      }
       if (!context.user) {
         throw new Error("You need to be logged in!");
       }
@@ -199,6 +137,22 @@ const resolvers = {
       } catch (err) {
         throw new Error("Error marking game as played!");
       }
+    },
+    uploadFile: ({ file }) => {
+      // Handle file upload logic here
+      return `File ${file.filename} uploaded successfully.`;
+    },
+    updateUserBio: async (parent, { bio }, context) => {
+      // Update the user bio in the database
+
+      if (!context.user) throw new Error("Not authenticated");
+
+      const updatedUser = await User.findByIdAndUpdate(
+        context.user._id,
+        { bio },
+        { new: true }
+      );
+      return updatedUser;
     },
   },
 };

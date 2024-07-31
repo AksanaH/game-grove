@@ -10,12 +10,13 @@ const gameSchema = new Schema({
   },
   rating: {
     type: Number,
+    default: 0,
   },
   description: {
     type: String,
     required: true,
   },
-  background_image: {
+  image: {
     type: String,
   },
   creators: [String],

@@ -1,27 +1,30 @@
-import React from 'react';
-import { Button, Checkbox, Form, Input } from 'antd';
-import { useMutation } from '@apollo/client';
-import { USER_LOGIN } from '../utils/mutations';
-import Auth from '../utils/auth'; 
+import { Button, Checkbox, Form, Input } from "antd";
+import { useMutation } from "@apollo/client";
+import { USER_LOGIN } from "../utils/mutations";
+import Auth from "../utils/auth";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [login] = useMutation(USER_LOGIN);
+  const navigate = useNavigate();
 
   // Handle form submission
   const handleFormSubmit = async (values) => {
-
-    console.log('Submitted values:', values);
+    console.log("Submitted values:", values);
     try {
       const { data } = await login({
         variables: { ...values },
       });
-      console.log('Login data:', data);
+      console.log("Login data:", data);
       Auth.login(data.login.token);
+      navigate("/");
     } catch (e) {
-        console.error('Error during login:', e);
+      console.error("Error during login:", e);
       if (e.graphQLErrors) {
         e.graphQLErrors.forEach(({ message, locations, path }) =>
-          console.log(`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`)
+          console.log(
+            `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
+          )
         );
       }
       if (e.networkError) {
@@ -32,7 +35,7 @@ const Login = () => {
 
   // Handle form submission failure
   const onFinishFailed = (errorInfo) => {
-    console.log('Failed:', errorInfo);
+    console.log("Failed:", errorInfo);
   };
 
   return (
@@ -49,7 +52,7 @@ const Login = () => {
       <Form.Item
         label="Email"
         name="email"
-        rules={[{ required: true, message: 'Please input your email!' }]}
+        rules={[{ required: true, message: "Please input your email!" }]}
       >
         <Input />
       </Form.Item>
@@ -57,7 +60,7 @@ const Login = () => {
       <Form.Item
         label="Password"
         name="password"
-        rules={[{ required: true, message: 'Please input your password!' }]}
+        rules={[{ required: true, message: "Please input your password!" }]}
       >
         <Input.Password />
       </Form.Item>

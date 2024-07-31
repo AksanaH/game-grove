@@ -11,6 +11,20 @@ const app = express();
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  context: ({ req }) => {
+    const token = req.headers.authorization || "";
+
+    if (token) {
+      try {
+        const user = jwt.verify(token, "your_secret_key");
+        return { user };
+      } catch (e) {
+        console.log("Invalid token");
+      }
+    }
+
+    return {};
+  },
 });
 
 const startApolloServer = async () => {
@@ -18,14 +32,12 @@ const startApolloServer = async () => {
 
   app.use(express.urlencoded({ extended: true }));
   app.use(express.json());
-
   app.use(
     "/graphql",
     expressMiddleware(server, {
       context: authMiddleware,
     })
   );
-
   // if we're in production, serve client/dist as static assets
   if (process.env.NODE_ENV === "production") {
     app.use(express.static(path.join(__dirname, "../client/dist")));
