@@ -65,7 +65,7 @@ export default function Home() {
       <div>
         <Row gutter={[20, 10]} justify="center">
           {games.map((item, index) => (
-            <Col key={index} xs={24} sm={24} md={8} lg={6} xl={4}>
+            <Col key={index} xs={24} sm={24} md={8} lg={6} xl={6}>
               <Gamecard
                 title={item.name}
                 description={`Genre: ${item.genres[0].name} |
