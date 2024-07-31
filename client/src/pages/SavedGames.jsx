@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Card, Tabs, Rate, Layout } from "antd";
+import { Card, Tabs, Rate, Layout, Spin, Alert } from "antd";
 import { DeleteFilled, CheckSquareFilled } from "@ant-design/icons";
 import "../App.css";
 import Auth from "../utils/auth";
@@ -9,12 +9,23 @@ import { useMutation, useQuery } from "@apollo/client";
 import { SINGLE_USER } from "../utils/queries";
 const { Meta } = Card;
 
+const tabData = [
+  { id: 1, title: "Saved Games", description: "game1" },
+  { id: 2, title: "Played Games", description: "game2" },
+  { id: 3, title: "Recently Deleted Games", description: "game3" },
+];
+
 const TabName = ({ title }) => {
   return <h1 className="tabs-btn">{title}</h1>;
 };
 
 const SavedGames = () => {
   const [tabPosition, setTabPosition] = useState("left");
+  const { loading, error, data } = useQuery(SINGLE_USER);
+  const [deleteGame, { error: deleteError }] = useMutation(DELETE_GAME);
+  const [rateGame] = useMutation(RATE_GAME);
+  const [playedGame] = useMutation(PLAYED_GAME);
+
   useEffect(() => {
     const handleResize = () => {
       setTabPosition(window.innerWidth < 768 ? "top" : "left");
@@ -24,10 +35,10 @@ const SavedGames = () => {
     handleResize();
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-  const { loading, data } = useQuery(SINGLE_USER);
-  const [deleteGame, { error }] = useMutation(DELETE_GAME);
-  const [rateGame] = useMutation(RATE_GAME);
-  const [playedGame] = useMutation(PLAYED_GAME);
+
+  if (loading) return <Spin size="large" />;
+  if (error) return <Alert message="Error loading user data" type="error" />;
+  if (deleteError) return <Alert message="Error deleting game" type="error" />;
 
   const userData = data?.getUser || {
     savedGames: [],
@@ -46,9 +57,10 @@ const SavedGames = () => {
         variables: { gameId, rating },
       });
     } catch (err) {
-      console.error(err);
+      console.error("Error rating game:", err);
     }
   };
+
   const handlePlayedGame = async (gameId) => {
     const token = Auth.loggedIn() ? Auth.getToken() : null;
     if (!token) {
@@ -60,7 +72,7 @@ const SavedGames = () => {
         variables: { gameId },
       });
     } catch (err) {
-      console.error(err);
+      console.error("Error marking game as played:", err);
     }
   };
 
@@ -77,9 +89,10 @@ const SavedGames = () => {
 
       removeGameId(gameId);
     } catch (err) {
-      console.error(err);
+      console.error("Error deleting game:", err);
     }
   };
+
   const Games = ({ games }) => (
     <div className="games-container">
       {games && games.length > 0 ? (
@@ -159,10 +172,6 @@ const SavedGames = () => {
       )}
     </div>
   );
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <Layout>
