@@ -47,7 +47,6 @@
   display: flex;
   justify-content: flex-start;
   flex-direction: column;
-
 }
 
 .avatar-uploader {
@@ -58,6 +57,54 @@
   font-family: "Lucida Console", "Courier New", monospace;
   font-style: italic;
   font-size: 20px;
-  color:bisque;
+  color: bisque;
   font-weight: bold;
+}
+
+.anticon {
+  font-size: 1rem;
+}
+
+@media screen and (max-width: 992px) {
+  .tabs-btn {
+    font-size: 14px;
+    padding: 4px 6px;
+  }
+}
+@media (max-width: 768px) {
+  .tabs-container .ant-tabs {
+    width: 80%;
+  }
+  .tabs-btn {
+    font-size: 12px;
+    padding: 4px 6px;
+  }
+  .ant-tabs .ant-tabs-content {
+    width: 45%;
+  }
+
+  .ant-card-meta-description {
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .tabs-container .ant-tabs {
+    font-size: 0.9rem;
+  }
+
+  .tabs-btn {
+    font-size: 0.8rem;
+    padding: 1px;
+  }
+  .ant-tabs .ant-tabs-content {
+    width: 40%;
+  }
+
+  .ant-card-meta-description {
+    font-size: 0.6rem;
+  }
+  .anticon {
+    font-size: 0.8rem;
+  }
 }
