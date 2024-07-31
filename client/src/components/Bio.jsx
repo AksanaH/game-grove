@@ -10,6 +10,7 @@ const BioForm = () => {
   const [bio, setBio] = useState("");
   const [updatedBio, setUpdatedBio] = useState("");
   const [form] = Form.useForm();
+  const username = data?.getUser?.username;
 
   useEffect(() => {
     if (!loading) {
@@ -45,6 +46,7 @@ const BioForm = () => {
 
   return (
     <div className="profile ant-tabs ant-tabs-left css-dev-only-do-not-override-1uq9j6g">
+      <p className="username">{username}</p>
       <p className="bio-text">{bio}</p>
       <Form form={form} onFinish={handleFormSubmit}>
         <Space.Compact>
