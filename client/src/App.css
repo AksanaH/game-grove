@@ -53,3 +53,11 @@
 .avatar-uploader {
   margin: 50px;
 }
+
+.username {
+  font-family: "Lucida Console", "Courier New", monospace;
+  font-style: italic;
+  font-size: 20px;
+  color:bisque;
+  font-weight: bold;
+}
