@@ -15,11 +15,19 @@ const TabName = ({ item }) => {
 const data = [
   { id: 1, title: "Saved Games", description: "game1" },
   { id: 2, title: "Played Games", description: "game2" },
-  { id: 3, title: "Recently Deleted Games", description: "game3" },
+  { id: 3, title: "Recently Deleted", description: "game3" },
 ];
 
 const SavedGames = () => {
-  const [tabPosition] = useState("left");
+  const [tabPosition, setTabPosition] = useState("left");
+  useEffect(() => {
+    const handleResize = () => {
+      setTabPosition(window.innerWidth < 768 ? "top" : "left");
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
   // const { loading, data } = useQuery(SINGLE_USER);
   const [deleteGame, { error }] = useMutation(DELETE_GAME);
   const [rateGame] = useMutation(RATE_GAME);
@@ -73,8 +81,10 @@ const SavedGames = () => {
   const Games = ({ game }) => (
     <Card
       style={{
-        width: 200,
+        width: "100%",
+        maxWidth: "300px",
         backgroundColor: "#657441e0",
+        margin: "0 auto",
       }}
       cover={
         <img
@@ -87,15 +97,18 @@ const SavedGames = () => {
           key="actions"
           style={{
             display: "flex",
-            justifyContent: "space-evenly",
+            flexDirection: "row",
+            justifyContent: "space-between",
             alignItems: "center",
+            padding: "0 10px",
+            fontSize: "1.2rem",
           }}
         >
           <CheckSquareFilled
             key="check"
             onClick={() => handlePlayedGame(game.gameId)}
           />
-          |
+
           <Rate
             key="rate"
             onChange={(value) => handleRateGame(game.gameId, value)}
@@ -111,6 +124,7 @@ const SavedGames = () => {
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
+              gap: "10px",
             }}
           >
             <span>{game.description}</span>
