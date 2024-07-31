@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Col, Row } from "antd";
 import Gamecard from "../components/Gamecard";
+import { getAllGames } from "../utils/API";
 
 export default function Home() {
   const [items1, setItems1] = useState([
@@ -87,6 +88,26 @@ export default function Home() {
     },
   ]);
 
+const [games, setGames] = useState([]);
+
+  useEffect(() => {
+    const fetchGames = async () => {
+      try {
+        const response = await getAllGames();
+        if (!response.ok) {
+          throw new Error("Network response was not ok.");
+        }
+        const {results} = await response.json();
+        console.log(results);
+        setGames(results);
+      } catch (error) {
+        console.error("Error fetching games:", error);
+      }
+    }
+    fetchGames();
+  }, []);
+      
+
   return (
     <>
       <div className="popular-games">
@@ -94,12 +115,13 @@ export default function Home() {
       </div>
       <div>
         <Row gutter={[20, 10]}justify = "center">
-          {items1.map((item, index) => (
+          {games.map((item, index) => (
             <Col key={index} xs={24} sm={24} md={8} lg={6} xl={4}>
               <Gamecard
-                title={item.title}
-                description={item.description}
-                image={item.image}
+                title={item.name}
+                description={`Genre: ${item.genres[0].name} |
+                ★ ${item.rating}` }
+                image={item.background_image}
               />
             </Col>
           ))}

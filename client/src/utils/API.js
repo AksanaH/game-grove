@@ -18,3 +18,16 @@ export const searchGames = async (query) => {
     throw error;
   }
 };
+
+export const getAllGames = async () => {
+  try {
+    const response = await fetch(`${BASE_URL}/games?key=${API_KEY}`);
+    if (!response.ok) {
+      throw new Error('Network response was not ok.');
+    }
+    return response;
+  } catch (error) {
+    console.error('Error fetching games:', error);
+    throw error;
+  }
+}
