@@ -33,12 +33,12 @@
 
 
 .container{
-  max-width: 1400px;
-  margin: 40px auto; /* Center the container and add margin to top and bottom */
+  max-width: 1000px;
   padding: 20px;
-  background-color: #495330d3;
+  background-color: rgba(70, 83, 48, 0.7);
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  
 }
 
 .container {
@@ -47,6 +47,8 @@
 
 body {
   background-image: url("./images/background.jpg");
+  background-size: cover;
+  background-attachment: fixed;
 }
 .ant-upload {
   background-color: white;
@@ -125,4 +127,14 @@ body {
   .anticon {
     font-size: 0.8rem;
   }
+}
+
+.text-center {
+  text-align: center;
+  color: white;
+}
+
+.content {
+  padding: 20px;
+  margin-top: 80px;
 }
