@@ -1,7 +1,9 @@
+import React, { useState } from "react";
 import { Col, Row } from "antd";
 import Gamecard from "../components/Gamecard";
+
 export default function Home() {
-  const items = [
+  const [items1, setItems1] = useState([
     {
       title: "Item 1",
       description: "Description for item 1",
@@ -27,21 +29,114 @@ export default function Home() {
       description: "Description for item 5",
       image: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png",
     },
-  ];
+  ]);
+
+  const [items2, setItems2] = useState([
+    {
+      title: "Item 6",
+      description: "Description for item 6",
+      image: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png",
+    },
+    {
+      title: "Item 7",
+      description: "Description for item 7",
+      image: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png",
+    },
+    {
+      title: "Item 8",
+      description: "Description for item 8",
+      image: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png",
+    },
+    {
+      title: "Item 9",
+      description: "Description for item 9",
+      image: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png",
+    },
+    {
+      title: "Item 10",
+      description: "Description for item 10",
+      image: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png",
+    },
+  ]);
+
+  const [items3, setItems3] = useState([
+    {
+      title: "Item 11",
+      description: "Description for item 11",
+      image: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png",
+    },
+    {
+      title: "Item 12",
+      description: "Description for item 12",
+      image: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png",
+    },
+    {
+      title: "Item 13",
+      description: "Description for item 13",
+      image: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png",
+    },
+    {
+      title: "Item 14",
+      description: "Description for item 14",
+      image: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png",
+    },
+    {
+      title: "Item 15",
+      description: "Description for item 15",
+      image: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png",
+    },
+  ]);
+
   return (
-    <div className="homepage-container">
-      <h1>Welcome Gamers!</h1>
-      <Row gutter={[6, 32]}>
-        {items.map((item, index) => (
-          <Col key={index} xs={24} sm={12} md={8} lg={6} xl={4}>
-            <Gamecard
-              title={item.title}
-              description={item.description}
-              image={item.image}
-            />
-          </Col>
-        ))}
-      </Row>
-    </div>
+    <>
+      <div className="popular-games">
+        <h1>Popular Games</h1>
+      </div>
+      <div className="container">
+        <Row gutter={[250, 10]}>
+          {items1.map((item, index) => (
+            <Col key={index} xs={24} sm={12} md={8} lg={6} xl={4}>
+              <Gamecard
+                title={item.title}
+                description={item.description}
+                image={item.image}
+              />
+            </Col>
+          ))}
+        </Row>
+      </div>
+      <div className="popular-games">
+        <h1>Popular Games</h1>
+      </div>
+      <div className="container">
+        <Row gutter={[250, 32]}>
+          {items2.map((item, index) => (
+            <Col key={index} xs={24} sm={12} md={8} lg={6} xl={4}>
+              <Gamecard
+                title={item.title}
+                description={item.description}
+                image={item.image}
+              />
+            </Col>
+          ))}
+        </Row>
+      </div>
+      <div className="popular-games">
+        <h1>Popular Games</h1>
+      </div>
+      <div className="container">
+        <Row gutter={[250, 32]}>
+          {items3.map((item, index) => (
+            <Col key={index} xs={24} sm={12} md={8} lg={6} xl={4}>
+              <Gamecard
+                title={item.title}
+                description={item.description}
+                image={item.image}
+              />
+            </Col>
+          ))}
+        </Row>
+      </div>
+    </>
   );
 }

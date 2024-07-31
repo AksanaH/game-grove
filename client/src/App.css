@@ -29,15 +29,18 @@
   background-image: url("../public/images/background.jpg");
   background-size: cover;
 }
-body {
-  background-image: url("../public/images/background.jpg");
-}
 
-.homepage-container {
-  max-width: 1200px;
+
+
+.container{
+  max-width: 1400px;
   margin: 40px auto; /* Center the container and add margin to top and bottom */
-  padding: 200px;
+  padding: 20px;
   background-color: #495330d3;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.container {
+  margin-bottom: 20px; /* Add spacing between each container */
 }
