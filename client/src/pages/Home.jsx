@@ -92,10 +92,10 @@ export default function Home() {
       <div className="popular-games">
         <h1>Popular Games</h1>
       </div>
-      <div className="container">
-        <Row gutter={[250, 10]}>
+      <div>
+        <Row gutter={[20, 10]}justify = "center">
           {items1.map((item, index) => (
-            <Col key={index} xs={24} sm={12} md={8} lg={6} xl={4}>
+            <Col key={index} xs={24} sm={24} md={8} lg={6} xl={4}>
               <Gamecard
                 title={item.title}
                 description={item.description}
@@ -108,10 +108,10 @@ export default function Home() {
       <div className="popular-games">
         <h1>Popular Games</h1>
       </div>
-      <div className="container">
-        <Row gutter={[250, 32]}>
+      <div>
+        <Row gutter={[20, 10]}justify="center">
           {items2.map((item, index) => (
-            <Col key={index} xs={24} sm={12} md={8} lg={6} xl={4}>
+            <Col key={index} xs={24} sm={24} md={8} lg={6} xl={4}>
               <Gamecard
                 title={item.title}
                 description={item.description}
@@ -124,10 +124,10 @@ export default function Home() {
       <div className="popular-games">
         <h1>Popular Games</h1>
       </div>
-      <div className="container">
-        <Row gutter={[250, 32]}>
+      <div >
+        <Row gutter={[20, 10]}justify="center">
           {items3.map((item, index) => (
-            <Col key={index} xs={24} sm={12} md={8} lg={6} xl={4}>
+            <Col key={index} xs={24} sm={24} md={8} lg={6} xl={4}>
               <Gamecard
                 title={item.title}
                 description={item.description}

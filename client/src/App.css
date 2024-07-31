@@ -44,3 +44,7 @@
 .container {
   margin-bottom: 20px; /* Add spacing between each container */
 }
+
+body {
+  background-image: url("./images/background.jpg");
+}
