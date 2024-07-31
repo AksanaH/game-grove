@@ -8,6 +8,7 @@ import Home from "./pages/Home.jsx";
 import Signup from "./components/Signup.jsx";
 import SavedGames from "./pages/SavedGames.jsx";
 import Profile from "./pages/Profile.jsx";
+import SearchGames from "./pages/SearchGames.jsx";
 
 const router = createBrowserRouter([
   {
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
       {
         path: '/profile',
         element: <Profile/>
+      },
+      {
+        path: "/searchgames", 
+        element: <SearchGames />,
       },
     ],
   },

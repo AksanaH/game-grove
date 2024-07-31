@@ -27,7 +27,7 @@ const Navbar = () => {
         </Link>
       </Col>
       <Col span={2}>
-        <Link className="navlink" to="/search">
+        <Link className="navlink" to="/searchgames">
           Search
         </Link>
       </Col>
