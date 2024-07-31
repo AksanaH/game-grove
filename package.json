@@ -18,7 +18,14 @@
     "concurrently": "^8.2.0"
   },
   "dependencies": {
+<<<<<<< Updated upstream
     "@ant-design/icons": "^5.4.0",
     "axios": "^1.7.2"
+=======
+    "apollo-server-express": "^3.13.0",
+    "axios": "^1.7.2",
+    "graphql-upload": "^15.0.0",
+    "wrap-ansi": "^9.0.0"
+>>>>>>> Stashed changes
   }
 }
