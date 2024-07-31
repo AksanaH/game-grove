@@ -15,18 +15,17 @@ const tabData = [
   { id: 3, title: "Recently Deleted Games", description: "game3" },
 ];
 
-const TabName = ({ item }) => {
-  return <h1 className="tabs-btn">{item.title}</h1>;
-};
-
 const TabName = ({ title }) => {
   return <h1 className="tabs-btn">{title}</h1>;
 };
 
 const SavedGames = () => {
-  const [tabPosition] = useState("left");
-  const { loading, data } = useQuery(SINGLE_USER);
   const [tabPosition, setTabPosition] = useState("left");
+  const { loading, error, data } = useQuery(SINGLE_USER);
+  const [deleteGame, { error: deleteError }] = useMutation(DELETE_GAME);
+  const [rateGame] = useMutation(RATE_GAME);
+  const [playedGame] = useMutation(PLAYED_GAME);
+
   useEffect(() => {
     const handleResize = () => {
       setTabPosition(window.innerWidth < 768 ? "top" : "left");
@@ -36,10 +35,10 @@ const SavedGames = () => {
     handleResize();
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-  const { loading, data } = useQuery(SINGLE_USER);
-  const [deleteGame, { error }] = useMutation(DELETE_GAME);
-  const [rateGame] = useMutation(RATE_GAME);
-  const [playedGame] = useMutation(PLAYED_GAME);
+
+  if (loading) return <Spin size="large" />;
+  if (error) return <Alert message="Error loading user data" type="error" />;
+  if (deleteError) return <Alert message="Error deleting game" type="error" />;
 
   const userData = data?.getUser || {
     savedGames: [],
@@ -58,9 +57,10 @@ const SavedGames = () => {
         variables: { gameId, rating },
       });
     } catch (err) {
-      console.error(err);
+      console.error("Error rating game:", err);
     }
   };
+
   const handlePlayedGame = async (gameId) => {
     const token = Auth.loggedIn() ? Auth.getToken() : null;
     if (!token) {
@@ -72,7 +72,7 @@ const SavedGames = () => {
         variables: { gameId },
       });
     } catch (err) {
-      console.error(err);
+      console.error("Error marking game as played:", err);
     }
   };
 
@@ -89,9 +89,10 @@ const SavedGames = () => {
 
       removeGameId(gameId);
     } catch (err) {
-      console.error(err);
+      console.error("Error deleting game:", err);
     }
   };
+
   const Games = ({ games }) => (
     <div className="games-container">
       {games && games.length > 0 ? (
@@ -171,10 +172,6 @@ const SavedGames = () => {
       )}
     </div>
   );
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <Layout>
