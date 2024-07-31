@@ -11,6 +11,20 @@ const app = express();
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  context: ({ req }) => {
+    const token = req.headers.authorization || "";
+
+    if (token) {
+      try {
+        const user = jwt.verify(token, "your_secret_key");
+        return { user };
+      } catch (e) {
+        console.log("Invalid token");
+      }
+    }
+
+    return {};
+  },
 });
 
 const startApolloServer = async () => {
