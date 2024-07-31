@@ -5,23 +5,24 @@ const { signToken } = require("../utils/auth");
 const resolvers = {
   Query: {
     getUser: async (parent, args, context) => {
-      if (!context.user) throw new Error("Not authenticated");
-      const userData = await User.findOne({ _id: context.user._id })
-        .select("-__v -password")
-        .populate("savedGames");
-
-      if (!userData) {
+      if (!context.user) {
+        throw new Error("You need to be logged in!");
+      }
+      const foundUser = await User.findById(context.user._id).populate(
+        "savedGames"
+      );
+      if (!foundUser) {
         throw new Error("Cannot find a user with this id!");
       }
-
-      return userData;
+      return foundUser;
     },
+
     getAllGames: async () => {
       const games = await Game.find();
       return games;
     },
-    getGame: async (parent, { id }) => {
-      const game = await Game.findOne({ _id: id });
+    getGame: async (parent, { gameId }) => {
+      const game = await Game.findOne({ id: gameId });
 
       if (!game) {
         throw new Error("Cannot find a game with this id!");
@@ -59,14 +60,15 @@ const resolvers = {
 
       try {
         const updatedUser = await User.findByIdAndUpdate(
-          { _id: context.user._id },
-          { $addToSet: { savedGames: gameData } },
+          context.user._id,
+          { $addToSet: { savedGames: gameData.id } },
           { new: true, runValidators: true }
         ).populate("savedGames");
 
         return updatedUser;
       } catch (err) {
-        throw new Error("Error saving game!");
+        console.error("Failed to save game with error:", err);
+        throw new Error(`Error saving game: ${err.message}`);
       }
     },
 
@@ -106,6 +108,7 @@ const resolvers = {
         }
 
         game.rating = rating;
+
         await game.save();
 
         const updatedUser = await User.findById(context.user._id).populate(
@@ -114,7 +117,7 @@ const resolvers = {
 
         return updatedUser;
       } catch (err) {
-        throw new Error("Error rating game!");
+        console.error("Error rating game");
       }
     },
 
