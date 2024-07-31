@@ -5,6 +5,7 @@ const { signToken } = require("../utils/auth");
 const resolvers = {
   Query: {
     getUser: async (parent, args, context) => {
+      if (!context.user) throw new Error("Not authenticated");
       const userData = await User.findOne({ _id: context.user._id })
         .select("-__v -password")
         .populate("savedGames");
@@ -19,8 +20,8 @@ const resolvers = {
       const games = await Game.find();
       return games;
     },
-    getGame: async (parent, { gameId }) => {
-      const game = await Game.findOne({ gameId });
+    getGame: async (parent, { id }) => {
+      const game = await Game.findOne({ _id: id });
 
       if (!game) {
         throw new Error("Cannot find a game with this id!");
@@ -32,7 +33,6 @@ const resolvers = {
   Mutation: {
     createUser: async (parent, args) => {
       const user = await User.create(args);
-
       const token = signToken(user);
       return { token, user };
     },
@@ -53,15 +53,13 @@ const resolvers = {
       return { token, user };
     },
     saveGame: async (parent, { gameData }, context) => {
+      if (!context.user) throw new Error("Not authenticated");
       try {
-        console.log(context.user);
-
         const updatedUser = await User.findByIdAndUpdate(
           { _id: context.user._id },
           { $addToSet: { savedGames: gameData } },
           { new: true, runValidators: true }
-        );
-        // .populate("savedGames");
+        ).populate("savedGames");
 
         return updatedUser;
       } catch (err) {
@@ -75,11 +73,11 @@ const resolvers = {
       }
 
       try {
-        const deletedGame = await Game.findOneAndDelete({ gameId });
+        const deletedGame = await Game.findOneAndDelete({ _id: gameId });
 
         const updatedUser = await User.findByIdAndUpdate(
-          context.user._id,
-          { $pull: { savedGames: { gameId } } },
+          { _id: context.user._id },
+          { $pull: { savedGames: { _id: gameId } } },
           { new: true }
         ).populate("savedGames");
 
@@ -99,7 +97,7 @@ const resolvers = {
       }
 
       try {
-        const game = await Game.findOne({ gameId });
+        const game = await Game.findOne({ _id: gameId });
         if (!game) {
           throw new Error("Game not found!");
         }

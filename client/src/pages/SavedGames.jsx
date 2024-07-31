@@ -89,7 +89,7 @@ const SavedGames = () => {
       cover={
         <img
           alt="example"
-          src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
+          src={game.image || "https://via.placeholder.com/300"}
         />
       }
       actions={[
@@ -111,13 +111,14 @@ const SavedGames = () => {
 
           <Rate
             key="rate"
+            value={game.rating}
             onChange={(value) => handleRateGame(game.gameId, value)}
           />
         </div>,
       ]}
     >
       <Meta
-        title={game.title}
+        title={game.name}
         description={
           <div
             style={{
@@ -139,6 +140,10 @@ const SavedGames = () => {
       />
     </Card>
   );
+  //  if (loading) {
+  //   return <div>Loading...</div>;
+  // }
+
   return (
     <>
       <Layout>
