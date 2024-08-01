@@ -5,10 +5,13 @@
   height: 100vh;
   width: 100%;
 }
+.card-container {
+  margin-bottom: 16px;
+}
 
 .ant-tabs {
-  width: 80%;
-  max-width: 800px;
+  width: 90%;
+  max-height: 90%;
   background-color: #495330d3;
   padding: 20px;
   border-radius: 8px;
@@ -39,7 +42,7 @@
 }
 
 .container {
-  margin-bottom: 20px; /* Add spacing between each container */
+  margin-bottom: 20px;
 }
 
 body {
@@ -89,6 +92,10 @@ body {
   }
 }
 @media (max-width: 768px) {
+  .ant-tabs {
+    width: 100%;
+    max-width: none;
+  }
   .tabs-container .ant-tabs {
     width: 80%;
   }
@@ -97,7 +104,7 @@ body {
     padding: 4px 6px;
   }
   .ant-tabs .ant-tabs-content {
-    width: 45%;
+    width: 100%;
   }
 
   .ant-card-meta-description {
@@ -134,15 +141,35 @@ body {
     font-size: 0.8rem;
     padding: 1px;
   }
+
   .ant-tabs .ant-tabs-content {
-    width: 40%;
+    width: 100%;
   }
 
   .ant-card-meta-description {
     font-size: 0.6rem;
   }
+
   .anticon {
     font-size: 0.8rem;
+  }
+
+  .card-container {
+    padding: 8px;
+  }
+
+  .ant-card {
+    width: 100%;
+  }
+
+  .ant-tabs-nav {
+    flex-wrap: wrap;
+  }
+
+  .ant-tabs-tab {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 8px;
   }
 }
 

@@ -1,5 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { Card, Tabs, Rate, Layout, Spin, Alert, Tooltip, Row, Col } from "antd";
+import {
+  Card,
+  Tabs,
+  Rate,
+  Layout,
+  Spin,
+  Alert,
+  Tooltip,
+  Row,
+  Col,
+  Carousel,
+} from "antd";
 import { DeleteFilled, CheckSquareFilled } from "@ant-design/icons";
 import "../App.css";
 import Auth from "../utils/auth";
@@ -13,6 +24,22 @@ const TabName = ({ title }) => {
   return <h1 className="tabs-btn">{title}</h1>;
 };
 
+const useIsMobile = () => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 576);
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  return isMobile;
+};
+
 const SavedGames = () => {
   const [tabPosition, setTabPosition] = useState("left");
   const { loading, error, data } = useQuery(SINGLE_USER);
@@ -22,6 +49,7 @@ const SavedGames = () => {
   const [ratingError, setRatingError] = useState(null);
   const [playedErrorState, setPlayedErrorState] = useState(null);
   const [deleteErrorState, setDeleteErrorState] = useState(null);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     const handleResize = () => {
@@ -102,98 +130,111 @@ const SavedGames = () => {
       console.error("Error deleting game:", err);
     }
   };
-  const Games = ({ games }) => (
-    <Row gutter={[8, 8]}>
-      {games && games.length > 0 ? (
-        games.map((game) => (
-          <Col key={game.gameId} xs={24} sm={12} md={8} lg={6}>
-            <Card
+
+  const renderCards = (games) =>
+    games.map((game) => (
+      <Col
+        key={game.gameId}
+        xs={24}
+        sm={12}
+        md={8}
+        lg={6}
+        className="card-container"
+      >
+        <Card
+          style={{
+            width: "100%",
+            backgroundColor: "#657441e0",
+            margin: "auto",
+          }}
+          cover={
+            <div style={{ position: "relative", display: "inline-block" }}>
+              <img
+                alt="example"
+                src={game.image || "https://via.placeholder.com/300"}
+                style={{
+                  width: "100%",
+                  height: "50%",
+                  display: "block",
+                  borderRadius: "8px",
+                }}
+              />
+              <Tooltip title="Mark as played">
+                <CheckSquareFilled
+                  onClick={() => handlePlayedGame(game.gameId)}
+                  style={{
+                    position: "absolute",
+                    top: "10px",
+                    right: "10px",
+                    cursor: "pointer",
+                    backgroundColor: "#ffffff",
+                    fontSize: "20px",
+                  }}
+                />
+              </Tooltip>
+            </div>
+          }
+          actions={[
+            <div
+              key="actions"
               style={{
-                width: "150px",
-                backgroundColor: "#657441e0",
-                margin: "auto",
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                padding: "0 10px",
+                fontSize: "1.2rem",
               }}
-              cover={
-                <div style={{ position: "relative", display: "inline-block" }}>
-                  <img
-                    alt="example"
-                    src={game.image || "https://via.placeholder.com/300"}
-                    style={{
-                      width: "100%",
-                      height: "50%",
-                      display: "block",
-                      borderRadius: "8px",
-                    }}
-                  />
-                  <Tooltip title="Mark as played">
-                    <CheckSquareFilled
-                      key="check"
-                      onClick={() => handlePlayedGame(game.gameId)}
-                      style={{
-                        position: "absolute",
-                        top: "10px",
-                        right: "10px",
-                        cursor: "pointer",
-                        backgroundColor: "#ffffff",
-                        fontSize: "20px",
-                      }}
+            >
+              <Tooltip title="Rate Me">
+                <Rate
+                  key="rate"
+                  value={game.rating}
+                  onChange={(value) => handleRateGame(game.gameId, value)}
+                />
+              </Tooltip>
+            </div>,
+          ]}
+        >
+          <Meta
+            title={game.name}
+            description={
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  gap: "10px",
+                }}
+              >
+                <span>{game.description}</span>
+                <div style={{ display: "flex", gap: "10px" }}>
+                  <Tooltip title="Delete Game">
+                    <DeleteFilled
+                      key="delete"
+                      onClick={() => handleDeleteGame(game.gameId)}
                     />
                   </Tooltip>
                 </div>
-              }
-              actions={[
-                <div
-                  key="actions"
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    padding: "0 10px",
-                    fontSize: "1.2rem",
-                  }}
-                >
-                  <Tooltip title="Rate Me">
-                    <Rate
-                      key="rate"
-                      value={game.rating}
-                      onChange={(value) => handleRateGame(game.gameId, value)}
-                    />
-                  </Tooltip>
-                </div>,
-              ]}
-            >
-              <Meta
-                title={game.name}
-                description={
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      gap: "10px",
-                    }}
-                  >
-                    <span>{game.description}</span>
-                    <div style={{ display: "flex", gap: "10px" }}>
-                      <Tooltip title="Delete Game">
-                        <DeleteFilled
-                          key="delete"
-                          onClick={() => handleDeleteGame(game.gameId)}
-                        />
-                      </Tooltip>
-                    </div>
-                  </div>
-                }
-              />
-            </Card>
-          </Col>
-        ))
-      ) : (
-        <p>No games saved yet.</p>
-      )}
-    </Row>
-  );
+              </div>
+            }
+          />
+        </Card>
+      </Col>
+    ));
+
+  const Games = ({ games }) =>
+    isMobile ? (
+      <Carousel arrows dotPosition="left" infinite={false}>
+        {games.map((game) => (
+          <div key={game.gameId} style={{ padding: "0 8px" }}>
+            {renderCards([game])}
+          </div>
+        ))}
+      </Carousel>
+    ) : (
+      <Row gutter={[8, 8]}>{renderCards(games)}</Row>
+    );
 
   return (
     <Layout>
