@@ -59,9 +59,22 @@ const resolvers = {
       }
 
       try {
+        // Ensure the gameData.id is a valid string, if necessary
+        if (!gameData.id || typeof gameData.id !== 'string') {
+          throw new Error("Invalid Game ID format");
+        }
+
+        // Find the game by the provided gameData.id
+        let game = await Game.findOne({ id: gameData.id });
+
+        if (!game) {
+          // Create the game if it does not exist in the database
+          game = await Game.create(gameData);
+        }
+
         const updatedUser = await User.findByIdAndUpdate(
           context.user._id,
-          { $addToSet: { savedGames: gameData.id } },
+          { $addToSet: { savedGames: game._id } },
           { new: true, runValidators: true }
         ).populate("savedGames");
 
@@ -78,6 +91,10 @@ const resolvers = {
       }
 
       try {
+        if (!gameId || typeof gameId !== 'string') {
+          throw new Error("Invalid Game ID format");
+        }
+
         const deletedGame = await Game.findOneAndDelete({ _id: gameId });
 
         const updatedUser = await User.findByIdAndUpdate(
@@ -102,6 +119,10 @@ const resolvers = {
       }
 
       try {
+        if (!gameId || typeof gameId !== 'string') {
+          throw new Error("Invalid Game ID format");
+        }
+
         const game = await Game.findOne({ _id: gameId });
         if (!game) {
           throw new Error("Game not found!");
@@ -118,6 +139,7 @@ const resolvers = {
         return updatedUser;
       } catch (err) {
         console.error("Error rating game");
+        throw new Error(`Error rating game: ${err.message}`);
       }
     },
 
@@ -127,6 +149,10 @@ const resolvers = {
       }
 
       try {
+        if (!gameId || typeof gameId !== 'string') {
+          throw new Error("Invalid Game ID format");
+        }
+
         const game = await Game.findOne({ _id: gameId });
         if (!game) {
           throw new Error("Game not found!");
