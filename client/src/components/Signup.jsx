@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Form, Input,Row, Col } from "antd";
 import { useMutation } from "@apollo/client";
 import { CREATE_USER } from "../utils/mutations";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import Auth from "../utils/auth";
 
 const Signup = () => {
@@ -44,9 +44,6 @@ const Signup = () => {
             }}
             wrapperCol={{
               span: 24,
-            }}
-            style={{
-              maxWidth: 600,
             }}
             initialValues={{
               remember: true,
@@ -127,7 +124,7 @@ const Signup = () => {
 
             <Form.Item
               wrapperCol={{
-                offset: 5,
+                offset: 4,
                 span: 16,
               }}
             >
@@ -136,6 +133,7 @@ const Signup = () => {
               </Button>
             </Form.Item>
           </Form>
+          <Link to="/login">Already have an account? Login here!</Link>
         </div>
       </Col>
     </Row>
