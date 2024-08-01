@@ -3,20 +3,22 @@ import React from "react";
 import { Card } from "antd";
 const { Meta } = Card;
 const Gamecard = ({
-    title = "Europe Street beat",
-    description = "www.instagram.com",
-    image = "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png",
+  title = "Europe Street beat",
+  description = "www.instagram.com",
+  image = "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png",
+  onClick,
 }) => (
   <Card
+    onClick={onClick}
     hoverable
     style={{
       height: 300,
     }}
     cover={
       <img
-      style={{
-        height: 200,
-      }}
+        style={{
+          height: 200,
+        }}
         alt="example"
         src={image}
       />

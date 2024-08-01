@@ -2,9 +2,13 @@ import React, { useEffect, useState } from "react";
 import { Col, Row } from "antd";
 import Gamecard from "../components/Gamecard";
 import { getAllGames } from "../utils/API";
+import Auth from "../utils/auth";
+import { useNavigate } from "react-router-dom";
 
 export default function Home() {
   const [games, setGames] = useState([]);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchGames = async () => {
@@ -22,6 +26,16 @@ export default function Home() {
     };
     fetchGames();
   }, []);
+
+const handleCardClick = (e) => {
+  e.preventDefault();
+  if (Auth.loggedIn()) {
+    navigate("/searchgames");
+  } else {
+    navigate("/login");
+  }
+}
+
 
   return (
     <div className="content">
@@ -52,6 +66,7 @@ export default function Home() {
                 title={item.name}
                 description={`Genre: ${item.genres[0].name} | ★ ${item.rating}`}
                 image={item.background_image}
+                onClick={handleCardClick}
               />
             </Col>
           ))}
