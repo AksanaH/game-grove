@@ -43,13 +43,24 @@ const useIsMobile = () => {
 
 const SavedGames = () => {
   const [tabPosition, setTabPosition] = useState("left");
-  const { loading, error, data } = useQuery(SINGLE_USER);
+  const { loading, error, data, refetch } = useQuery(SINGLE_USER);
   const [deleteGame, { error: deleteError }] = useMutation(DELETE_GAME);
   const [rateGame, { error: rateError }] = useMutation(RATE_GAME);
   const [playedGame, { error: playedError }] = useMutation(PLAYED_GAME);
   const [recentlyDeleted, setRecentlyDeleted] = useState([]);
   const [expandedDescriptions, setExpandedDescriptions] = useState({});
   const isMobile = useIsMobile();
+  const [userData, setUserData] = useState({
+    savedGames: [],
+    playedGames: [],
+    recentlyDeleted: [],
+  });
+
+  useEffect(() => {
+    if (data) {
+      setUserData(data.getUser);
+    }
+  }, [data]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -60,13 +71,6 @@ const SavedGames = () => {
     handleResize();
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
-  const userData = data?.getUser || {
-    savedGames: [],
-    playedGames: [],
-    recentlyDeleted: [],
-  };
-
   const handleRateGame = async (gameId, rating) => {
     console.log({ gameId, rating });
 
@@ -80,15 +84,33 @@ const SavedGames = () => {
         variables: { gameId, rating },
       });
 
-      const updatedGames = userData.savedGames.map((game) =>
-        game.gameId === gameId
-          ? { ...game, rating: data.rateGame.rating }
-          : game
-      );
+      console.log("Mutation response data:", data);
 
-      userData.savedGames = updatedGames;
+      if (data && data.rateGame && data.rateGame.savedGames) {
+        // Update the savedGames state with the new rating
+        const updatedGames = data.rateGame.savedGames;
+        setUserData((prevUserData) => ({
+          ...prevUserData,
+          savedGames: updatedGames,
+        }));
+
+        // Refetch the user data to get the latest changes from the server
+        refetch();
+      } else {
+        console.error("Unexpected response data format:", data);
+      }
     } catch (err) {
       console.error("Error rating game:", err);
+      if (err.graphQLErrors) {
+        err.graphQLErrors.forEach(({ message, locations, path }) => {
+          console.error(
+            `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
+          );
+        });
+      }
+      if (err.networkError) {
+        console.error(`[Network error]: ${err.networkError}`);
+      }
     }
   };
 
