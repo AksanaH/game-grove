@@ -82,9 +82,18 @@ const SavedGames = () => {
     }
 
     try {
-      await rateGame({
+      const { data } = await rateGame({
         variables: { gameId, rating },
       });
+
+      const updatedGames = userData.savedGames.map((game) =>
+        game.gameId === gameId
+          ? { ...game, rating: data.rateGame.rating }
+          : game
+      );
+
+      userData.savedGames = updatedGames;
+
       setRatingError(null);
     } catch (err) {
       setRatingError("Error rating game");
@@ -206,7 +215,7 @@ const SavedGames = () => {
                 <Rate
                   key="rate"
                   value={game.rating}
-                  onChange={(value) => handleRateGame(game.gameId, value)}
+                  onChange={(value) => handleRateGame(game.id, value)}
                 />
               </Tooltip>
             </div>,
