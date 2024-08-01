@@ -1,14 +1,41 @@
 .header {
-    min-height: 72px;
-    background-color: black;
-    color: white;
-    /* position: fixed;
-    top: 0;
-    width: 100%;
-    z-index: 100; */
+  min-height: 72px;
+  background-color: black;
+  color: white;
+  padding: 10px 20px;
+  background-color: #000000;
 }
 
 .navlink {
-    color: white;
-    text-decoration: none;
+  color: white;
+  text-decoration: none;
+  margin-left: 20px;
+
+  text-decoration: none;
+}
+
+.navlink:hover {
+  color: #1890ff;
+}
+
+.desktop-menu {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.mobile-menu {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .desktop-menu {
+    display: none;
+  }
+
+  .mobile-menu {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
 }

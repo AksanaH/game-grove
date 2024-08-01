@@ -60,7 +60,7 @@ const resolvers = {
 
       try {
         // Ensure the gameData.id is a valid string, if necessary
-        if (!gameData.id || typeof gameData.id !== 'string') {
+        if (!gameData.id || typeof gameData.id !== "string") {
           throw new Error("Invalid Game ID format");
         }
 
@@ -74,7 +74,7 @@ const resolvers = {
 
         const updatedUser = await User.findByIdAndUpdate(
           context.user._id,
-          { $addToSet: { savedGames: game._id } },
+          { $addToSet: { savedGames: gameData.id } },
           { new: true, runValidators: true }
         ).populate("savedGames");
 
@@ -85,13 +85,13 @@ const resolvers = {
       }
     },
 
-    deleteGame: async (parent, { gameId }, context) => {
+    deleteGame: async (parent, { id }, context) => {
       if (!context.user) {
         throw new Error("You need to be logged in!");
       }
 
       try {
-        if (!gameId || typeof gameId !== 'string') {
+        if (!gameId || typeof gameId !== "string") {
           throw new Error("Invalid Game ID format");
         }
 
@@ -99,7 +99,7 @@ const resolvers = {
 
         const updatedUser = await User.findByIdAndUpdate(
           context.user._id,
-          { $pull: { savedGames: { _id: gameId } } },
+          { $pull: { savedGames: { _id: id } } },
           { new: true }
         ).populate("savedGames");
 
@@ -113,13 +113,13 @@ const resolvers = {
       }
     },
 
-    rateGame: async (parent, { gameId, rating }, context) => {
+    rateGame: async (parent, { id, rating }, context) => {
       if (!context.user) {
         throw new Error("You need to be logged in!");
       }
 
       try {
-        if (!gameId || typeof gameId !== 'string') {
+        if (!gameId || typeof gameId !== "string") {
           throw new Error("Invalid Game ID format");
         }
 
@@ -149,7 +149,7 @@ const resolvers = {
       }
 
       try {
-        if (!gameId || typeof gameId !== 'string') {
+        if (!gameId || typeof gameId !== "string") {
           throw new Error("Invalid Game ID format");
         }
 

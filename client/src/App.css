@@ -30,15 +30,12 @@
   background-size: cover;
 }
 
-
-
-.container{
+.container {
   max-width: 1000px;
   padding: 20px;
   background-color: rgba(70, 83, 48, 0.7);
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  
 }
 
 .container {
@@ -106,6 +103,26 @@ body {
   .ant-card-meta-description {
     font-size: 0.7rem;
   }
+  .desktop-menu {
+    display: none;
+  }
+  .ant-tabs-nav {
+    margin: 0;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .ant-tabs-nav-wrap {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .ant-tabs-tab {
+    flex: 1;
+    text-align: center;
+  }
 }
 
 @media (max-width: 576px) {
@@ -138,4 +155,14 @@ body {
   padding-left: 150px;
   padding-right: 150px;
   margin-top: 80px;
+}
+.search-button {
+  background-color: #0c0f06;
+  border-color: #0c0f06;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.search-button:hover {
+  background-color: #3f6da2;
+  color: #000;
 }
