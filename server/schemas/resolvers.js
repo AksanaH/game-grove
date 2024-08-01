@@ -98,7 +98,7 @@ const resolvers = {
         if (!game) {
           throw new Error("Game not found!");
         }
-        console.log("Deleting game:", game);
+
         await Game.findByIdAndDelete(gameId);
 
         const updatedUser = await User.findByIdAndUpdate(
@@ -118,7 +118,7 @@ const resolvers = {
       }
     },
 
-    rateGame: async (parent, { gameId, rating }, context) => {
+    rateGame: async (parent, { id, rating }, context) => {
       if (!context.user) {
         throw new Error("You need to be logged in!");
       }
