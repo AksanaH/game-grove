@@ -85,21 +85,25 @@ const resolvers = {
       }
     },
 
-    deleteGame: async (parent, { id }, context) => {
+    deleteGame: async (parent, { gameId }, context) => {
       if (!context.user) {
         throw new Error("You need to be logged in!");
       }
 
       try {
-        if (!id || typeof id !== "string") {
+        if (!gameId || typeof gameId !== "string") {
           throw new Error("Invalid Game ID format");
         }
-
-        const deletedGame = await Game.findOneAndDelete({ _id: id });
+        const game = await Game.findById(gameId);
+        if (!game) {
+          throw new Error("Game not found!");
+        }
+        console.log("Deleting game:", game);
+        await Game.findByIdAndDelete(gameId);
 
         const updatedUser = await User.findByIdAndUpdate(
           context.user._id,
-          { $pull: { savedGames: { _id: id } } },
+          { $pull: { savedGames: gameId } },
           { new: true }
         ).populate("savedGames");
 
@@ -109,6 +113,7 @@ const resolvers = {
 
         return updatedUser;
       } catch (err) {
+        console.error("Error deleting game:", err);
         throw new Error("Error deleting game!");
       }
     },
