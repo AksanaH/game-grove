@@ -128,11 +128,21 @@ const SavedGames = () => {
     } catch (err) {
       setDeleteErrorState("Error deleting game");
       console.error("Error deleting game:", err);
+      if (err.graphQLErrors) {
+        err.graphQLErrors.forEach(({ message, locations, path }) =>
+          console.error(
+            `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
+          )
+        );
+      }
+      if (err.networkError) {
+        console.error(`[Network error]: ${err.networkError}`);
+      }
     }
   };
 
   const renderCards = (games) =>
-    games.map((game) => (
+    (games || []).map((game) => (
       <Col
         key={game.gameId}
         xs={24}

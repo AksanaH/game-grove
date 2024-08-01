@@ -72,34 +72,58 @@ const Navbar = () => {
 
   return (
     <Row justify="space-between" className="header" align="middle">
-    <Col>
-      <img src="./images/gamecue-transparent.png" alt="" style={{ width: "50px", height: "50px" }} />
-    </Col>
-    <Col className="navlinks">
-      <Link className="navlink" to="/">Games</Link>
-      <Link className="navlink" to="/searchgames">Search</Link>
-      {isLoggedIn && (
-        <>
-          <Link className="navlink" to="/mygames">My Games</Link>
-          <Link className="navlink" to="/profile">Profile</Link>
-        </>
-      )}
-      {isLoggedIn ? (
-        <span className="navlink" onClick={handleLogout} style={{ cursor: "pointer" }}>Logout</span>
-      ) : (
-        <>
-          <Link className="navlink" to="/login">Login</Link>
-          <Link className="navlink" to="/signup">Signup</Link>
-        </>
-      )}
-    </Col>
-    <Col className="menu-icon">
-      <Dropdown overlay={menu} trigger={['click']}>
-        <Button type="text" icon={<MenuOutlined style={{ color: "white" }} />} />
-      </Dropdown>
-    </Col>
-  </Row>
-  
+      <Col>
+        <img
+          src="./images/gamecue-transparent.png"
+          alt=""
+          style={{ width: "75px", height: "75px", margin: "5px" }}
+        />
+      </Col>
+      <Col className="navlinks">
+        <Link className="navlink" to="/">
+          Games
+        </Link>
+        <Link className="navlink" to="/searchgames">
+          Search
+        </Link>
+        {isLoggedIn && (
+          <>
+            <Link className="navlink" to="/mygames">
+              My Games
+            </Link>
+            <Link className="navlink" to="/profile">
+              Profile
+            </Link>
+          </>
+        )}
+        {isLoggedIn ? (
+          <span
+            className="navlink"
+            onClick={handleLogout}
+            style={{ cursor: "pointer" }}
+          >
+            Logout
+          </span>
+        ) : (
+          <>
+            <Link className="navlink" to="/login">
+              Login
+            </Link>
+            <Link className="navlink" to="/signup">
+              Signup
+            </Link>
+          </>
+        )}
+      </Col>
+      <Col className="menu-icon">
+        <Dropdown overlay={menu} trigger={["click"]}>
+          <Button
+            type="text"
+            icon={<MenuOutlined style={{ color: "white" }} />}
+          />
+        </Dropdown>
+      </Col>
+    </Row>
   );
 };
 

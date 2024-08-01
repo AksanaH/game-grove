@@ -27,7 +27,9 @@ const typeDefs = `
         username: String!
         email: String!
         password: String!  
-        savedGames: [Game]
+        savedGames: [Game!]
+        playedGames: [Game!]
+        recentlyDeleted: [Game!]
         bio: String
     }
 
