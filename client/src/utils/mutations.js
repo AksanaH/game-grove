@@ -56,7 +56,7 @@ export const RATE_GAME = gql`
       _id
       username
       savedGames {
-        id
+        gameId
         name
         rating
       }
@@ -70,9 +70,11 @@ export const PLAYED_GAME = gql`
       username
       _id
       savedGames {
-        played
+        gameId
         name
-        id
+        description
+        rating
+        image
       }
     }
   }
@@ -84,7 +86,7 @@ export const DELETE_GAME = gql`
       username
       _id
       savedGames {
-        id
+        gameId
         description
         nams
       }
