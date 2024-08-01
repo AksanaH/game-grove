@@ -4,12 +4,12 @@ import {
   Tabs,
   Rate,
   Layout,
-  Spin,
   Alert,
   Tooltip,
   Row,
   Col,
   Carousel,
+  Button,
 } from "antd";
 import { DeleteFilled, CheckSquareFilled } from "@ant-design/icons";
 import "../App.css";
@@ -18,6 +18,7 @@ import { DELETE_GAME, RATE_GAME, PLAYED_GAME } from "../utils/mutations";
 import { removeGameId } from "../utils/localStorage";
 import { useMutation, useQuery } from "@apollo/client";
 import { SINGLE_USER } from "../utils/queries";
+import DOMPurify from "dompurify";
 const { Meta } = Card;
 
 const TabName = ({ title }) => {
@@ -46,10 +47,8 @@ const SavedGames = () => {
   const [deleteGame, { error: deleteError }] = useMutation(DELETE_GAME);
   const [rateGame, { error: rateError }] = useMutation(RATE_GAME);
   const [playedGame, { error: playedError }] = useMutation(PLAYED_GAME);
-  const [ratingError, setRatingError] = useState(null);
-  const [playedErrorState, setPlayedErrorState] = useState(null);
-  const [deleteErrorState, setDeleteErrorState] = useState(null);
   const [recentlyDeleted, setRecentlyDeleted] = useState([]);
+  const [expandedDescriptions, setExpandedDescriptions] = useState({});
   const isMobile = useIsMobile();
 
   useEffect(() => {
@@ -61,11 +60,6 @@ const SavedGames = () => {
     handleResize();
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
-  if (loading) return <Spin size="large" />;
-  if (error) return <Alert message="Error loading user data" type="error" />;
-  if (deleteError || rateError || playedError)
-    return <Alert message="Error performing operation" type="error" />;
 
   const userData = data?.getUser || {
     savedGames: [],
@@ -93,10 +87,7 @@ const SavedGames = () => {
       );
 
       userData.savedGames = updatedGames;
-
-      setRatingError(null);
     } catch (err) {
-      setRatingError("Error rating game");
       console.error("Error rating game:", err);
     }
   };
@@ -113,9 +104,7 @@ const SavedGames = () => {
       await playedGame({
         variables: { gameId },
       });
-      setPlayedErrorState(null);
     } catch (err) {
-      setPlayedErrorState("Error marking game as played");
       console.error("Error marking game as played:", err);
     }
   };
@@ -139,9 +128,7 @@ const SavedGames = () => {
 
       setRecentlyDeleted((prev) => [...prev, gameToDelete]);
       removeGameId(gameId);
-      setDeleteErrorState(null);
     } catch (err) {
-      setDeleteErrorState("Error deleting game");
       console.error("Error deleting game:", err);
       if (err.graphQLErrors) {
         err.graphQLErrors.forEach(({ message, locations, path }) =>
@@ -154,6 +141,33 @@ const SavedGames = () => {
         console.error(`[Network error]: ${err.networkError}`);
       }
     }
+  };
+
+  const toggleDescription = (gameId) => {
+    setExpandedDescriptions((prevState) => ({
+      ...prevState,
+      [gameId]: !prevState[gameId],
+    }));
+  };
+
+  const renderDescription = (game) => {
+    const isExpanded = expandedDescriptions[game.id];
+    const description = DOMPurify.sanitize(game.description);
+    const shortDescription = description.slice(0, 300); // Adjust length as needed
+
+    return (
+      <div>
+        <div
+          className={`description ${isExpanded ? "" : "clamped"}`}
+          dangerouslySetInnerHTML={{
+            __html: isExpanded ? description : `${shortDescription}...`,
+          }}
+        />
+        <Button type="link" onClick={() => toggleDescription(game.id)}>
+          {isExpanded ? "Read less" : "Read more"}
+        </Button>
+      </div>
+    );
   };
 
   const renderCards = (games) =>
@@ -179,7 +193,7 @@ const SavedGames = () => {
                 src={game.image || "https://via.placeholder.com/300"}
                 style={{
                   width: "100%",
-                  height: "50%",
+                  height: "80%",
                   display: "block",
                   borderRadius: "8px",
                 }}
@@ -227,13 +241,18 @@ const SavedGames = () => {
               <div
                 style={{
                   display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
+                  flexDirection: "column",
                   gap: "10px",
                 }}
               >
-                <span>{game.description}</span>
-                <div style={{ display: "flex", gap: "10px" }}>
+                {renderDescription(game)}
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
                   <Tooltip title="Delete Game">
                     <DeleteFilled
                       key="delete"
