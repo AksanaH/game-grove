@@ -73,11 +73,13 @@ const Navbar = () => {
   return (
     <Row justify="space-between" className="header" align="middle">
       <Col>
-        <img
-          src="./images/gamecue-transparent.png"
-          alt=""
-          style={{ width: "75px", height: "75px", margin: "5px" }}
-        />
+        <Link to="/">
+          <img
+            src="./images/gamecue-transparent.png"
+            alt=""
+            style={{ width: "75px", height: "75px", margin: "5px" }}
+          />
+        </Link>
       </Col>
       <Col className="navlinks">
         <Link className="navlink" to="/">
