@@ -35,14 +35,19 @@
 
 .container {
   max-width: 1000px;
-  padding: 20px;
+  padding: 30px;
   background-color: rgba(70, 83, 48, 0.7);
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  color: white !important;
 }
 
 .container {
   margin-bottom: 20px;
+}
+
+.container a, .container label{
+  color: white !important;
 }
 
 body {
