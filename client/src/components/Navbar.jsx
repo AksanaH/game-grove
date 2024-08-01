@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Col, Row, Drawer, Button } from "antd";
+import { Col, Row, Dropdown, Menu, Button } from "antd";
 import { MenuOutlined } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
 import "./Navbar.css";
@@ -21,121 +21,85 @@ const Navbar = () => {
     navigate("/"); // Redirect to home page after logout
   };
 
-  const showDrawer = () => {
-    setVisible(true);
-  };
-
-  const closeDrawer = () => {
-    setVisible(false);
-  };
-
-  return (
-    <>
-      <Row justify="end" className="header" align="middle">
-        <Col
-          span={24}
-          style={{
-            display: "flex",
-            justifyContent: "flex-start",
-            paddingTop: "8px",
-          }}
-        >
-          <img
-            src="./images/gamecue-transparent.png"
-            alt="game logo"
-            style={{ width: "75px", height: "75px" }}
-          />
-        </Col>
-        <Col
-          span={20}
-          style={{ display: "flex", justifyContent: "flex-end" }}
-          className="desktop-menu"
-        >
-          <Link className="navlink" to="/">
-            Games
-          </Link>
-          <Link className="navlink" to="/searchgames">
-            Search
-          </Link>
-          {isLoggedIn && (
-            <>
-              <Link className="navlink" to="/mygames">
-                My Games
-              </Link>
-              <Link className="navlink" to="/profile">
-                Profile
-              </Link>
-            </>
-          )}
-          {isLoggedIn ? (
-            <span
-              className="navlink"
-              onClick={handleLogout}
-              style={{ cursor: "pointer" }}
-            >
-              Logout
-            </span>
-          ) : (
+  const menu = (
+    <Menu style={{ backgroundColor: "black" }}>
+      <Menu.Item key="1">
+        <Link className="navlink" to="/">
+          Games
+        </Link>
+      </Menu.Item>
+      <Menu.Item key="2">
+        <Link className="navlink" to="/searchgames">
+          Search
+        </Link>
+      </Menu.Item>
+      {isLoggedIn && (
+        <>
+          <Menu.Item key="3">
+            <Link className="navlink" to="/mygames">
+              My Games
+            </Link>
+          </Menu.Item>
+          <Menu.Item key="4">
+            <Link className="navlink" to="/profile">
+              Profile
+            </Link>
+          </Menu.Item>
+        </>
+      )}
+      {isLoggedIn ? (
+        <Menu.Item key="5" onClick={handleLogout}>
+          <span className="navlink" style={{ cursor: "pointer" }}>
+            Logout
+          </span>
+        </Menu.Item>
+      ) : (
+        <>
+          <Menu.Item key="6">
             <Link className="navlink" to="/login">
               Login
             </Link>
-          )}
-          {!isLoggedIn && (
+          </Menu.Item>
+          <Menu.Item key="7">
             <Link className="navlink" to="/signup">
               Signup
             </Link>
-          )}
-        </Col>
-        <Col span={20} className="mobile-menu" style={{ display: "none" }}>
-          <Button type="primary" icon={<MenuOutlined />} onClick={showDrawer} />
-        </Col>
-      </Row>
-      <Drawer
-        title="Menu"
-        placement="right"
-        onClose={closeDrawer}
-        visible={visible}
-        className="mobile-menu"
-      >
-        <Link className="navlink" to="/" onClick={closeDrawer}>
-          Games
-        </Link>
-        <Link className="navlink" to="/searchgames" onClick={closeDrawer}>
-          Search
-        </Link>
-        {isLoggedIn && (
-          <>
-            <Link className="navlink" to="/mygames" onClick={closeDrawer}>
-              My Games
-            </Link>
-            <Link className="navlink" to="/profile" onClick={closeDrawer}>
-              Profile
-            </Link>
-          </>
-        )}
-        {isLoggedIn ? (
-          <span
-            className="navlink"
-            onClick={() => {
-              handleLogout();
-              closeDrawer();
-            }}
-            style={{ cursor: "pointer" }}
-          >
-            Logout
-          </span>
-        ) : (
-          <Link className="navlink" to="/login" onClick={closeDrawer}>
-            Login
-          </Link>
-        )}
-        {!isLoggedIn && (
-          <Link className="navlink" to="/signup" onClick={closeDrawer}>
-            Signup
-          </Link>
-        )}
-      </Drawer>
-    </>
+          </Menu.Item>
+        </>
+      )}
+    </Menu>
+  );
+
+  return (
+    <Row justify="space-between" className="header" align="middle">
+    <Col>
+      <img src="./images/gamecue-transparent.png" alt="" style={{ width: "50px", height: "50px" }} />
+    </Col>
+    <Col className="navlinks">
+      <Link className="navlink" to="/">Games</Link>
+      <Link className="navlink" to="/searchgames">Search</Link>
+      {isLoggedIn && (
+        <>
+          <Link className="navlink" to="/mygames">My Games</Link>
+          <Link className="navlink" to="/profile">Profile</Link>
+        </>
+      )}
+      {isLoggedIn ? (
+        <span className="navlink" onClick={handleLogout} style={{ cursor: "pointer" }}>Logout</span>
+      ) : (
+        <>
+          <Link className="navlink" to="/login">Login</Link>
+          <Link className="navlink" to="/signup">Signup</Link>
+        </>
+      )}
+    </Col>
+    <Col className="menu-icon">
+      <Dropdown overlay={menu} trigger={['click']}>
+        <Button type="text" icon={<MenuOutlined style={{ color: "white" }} />} />
+      </Dropdown>
+    </Col>
+  </Row>
+  
   );
 };
 

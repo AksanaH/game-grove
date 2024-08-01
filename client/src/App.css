@@ -181,7 +181,28 @@ body {
 .content {
   padding-left: 150px;
   padding-right: 150px;
-  margin-top: 80px;
+  margin-top: 30px;
+  margin-bottom: 50px;
+}
+
+@media screen and (max-width: 500px)  {
+  .content {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+} 
+
+.welcome-section {
+  padding-bottom: 30px;
+}
+
+.welcome-title {
+  font-size: 3.5rem;
+}
+
+.welcome-description {
+  font-size: 1.2rem;
+  margin-bottom: 30px;
 }
 .search-button {
   background-color: #0c0f06;

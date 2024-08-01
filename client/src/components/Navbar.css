@@ -1,41 +1,63 @@
+/* Ensure the header fits within the viewport */
 .header {
-  min-height: 72px;
-  background-color: black;
-  color: white;
-  padding: 10px 20px;
-  background-color: #000000;
-}
-
-.navlink {
-  color: white;
-  text-decoration: none;
-  margin-left: 20px;
-
-  text-decoration: none;
-}
-
-.navlink:hover {
-  color: #1890ff;
-}
-
-.desktop-menu {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-}
-
-.mobile-menu {
-  display: none;
-}
-
-@media (max-width: 768px) {
-  .desktop-menu {
+    min-height: 72px;
+    background-color: black;
+    color: white;
+    padding: 0 10px; /* Reduce padding to fit everything within the viewport */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    box-sizing: border-box; /* Ensure padding is included in the element's total width and height */
+    overflow-x: hidden; /* Prevent horizontal overflow */
+  }
+  
+  .navlink {
+    color: white;
+    text-decoration: none;
+    margin-right: 15px; /* Reduce margin to fit links better */
+  }
+  
+  .navlinks {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-grow: 1;
+  }
+  
+  .menu-icon {
     display: none;
   }
-
-  .mobile-menu {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
+  
+  @media (max-width: 768px) {
+    .navlinks {
+      display: none;
+    }
+    .menu-icon {
+      display: block;
+    }
   }
-}
+  
+  /* Customize dropdown menu */
+  .ant-dropdown-menu {
+    background-color: black !important;
+  }
+  
+  .ant-dropdown-menu-item {
+    padding: 10px 20px;
+  }
+  
+  .ant-dropdown-menu-item a {
+    color: white !important;
+  }
+  
+  .ant-dropdown-menu-item:hover {
+    background-color: #333 !important;
+  }
+  
+  /* Ensure no horizontal scroll on body */
+  body {
+    margin: 0;
+    overflow-x: hidden; /* Prevent horizontal scroll */
+  }
+  
