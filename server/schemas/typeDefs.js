@@ -10,6 +10,7 @@ const typeDefs = `
     }
 
     type Game {
+    gameId: ID!
         id: String!              
         name: String!        
         description: String!

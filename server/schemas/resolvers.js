@@ -21,8 +21,8 @@ const resolvers = {
       const games = await Game.find();
       return games;
     },
-    getGame: async (parent, { gameId }) => {
-      const game = await Game.findOne({ id: gameId });
+    getGame: async (parent, { id }) => {
+      const game = await Game.findOne({ gameId: id });
 
       if (!game) {
         throw new Error("Cannot find a game with this id!");
@@ -91,11 +91,11 @@ const resolvers = {
       }
 
       try {
-        if (!gameId || typeof gameId !== "string") {
+        if (!id || typeof id !== "string") {
           throw new Error("Invalid Game ID format");
         }
 
-        const deletedGame = await Game.findOneAndDelete({ _id: gameId });
+        const deletedGame = await Game.findOneAndDelete({ _id: id });
 
         const updatedUser = await User.findByIdAndUpdate(
           context.user._id,
