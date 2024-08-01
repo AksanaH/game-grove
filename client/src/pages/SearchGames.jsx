@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Layout, Row, Col, Button, Card, Input, Rate } from "antd";
+import { Layout, Row, Col, Button, Card, Input, Rate, Alert } from "antd";
 import { searchGames } from "../utils/API"; // Adjust path if needed
 import { useMutation } from "@apollo/client";
 import { SAVE_GAME, RATE_GAME } from "../utils/mutations"; // Adjust path if needed
@@ -14,6 +14,8 @@ const SearchGames = () => {
   const [saveGame] = useMutation(SAVE_GAME);
   const [rateGame] = useMutation(RATE_GAME);
   const [rating, setRating] = useState({});
+  const [alertVisible, setAlertVisible] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
@@ -63,6 +65,9 @@ const SearchGames = () => {
     try {
       const { data } = await saveGame({ variables: { gameData } });
       console.log("Game saved successfully:", data);
+      setAlertMessage("Saved Game Successful");
+      setAlertVisible(true);
+      setTimeout(() => setAlertVisible(false), 3000);
     } catch (err) {
       console.error("Error saving game:", err.message);
       if (err.graphQLErrors) {
@@ -125,6 +130,13 @@ const SearchGames = () => {
             </form>
           </Col>
         </Row>
+        {alertVisible && (
+          <Row justify="center" style={{ marginTop: "20px" }}>
+            <Col span={24}>
+              <Alert message={alertMessage} type="success" showIcon />
+            </Col>
+          </Row>
+        )}
         <Row gutter={16} style={{ marginTop: "20px" }}>
           {searchedGames.map((game) => (
             <Col key={game.id} span={8}>
