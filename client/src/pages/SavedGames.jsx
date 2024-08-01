@@ -93,7 +93,7 @@ const SavedGames = () => {
 
   const handlePlayedGame = async (gameId) => {
     console.log({ gameId });
-
+    console.log("Game ID:", gameId);
     const token = Auth.loggedIn() ? Auth.getToken() : null;
     if (!token) {
       return false;
@@ -212,7 +212,7 @@ const SavedGames = () => {
                   <Tooltip title="Delete Game">
                     <DeleteFilled
                       key="delete"
-                      onClick={() => handleDeleteGame(game.gameId)}
+                      onClick={() => handleDeleteGame(game.id)}
                     />
                   </Tooltip>
                 </div>

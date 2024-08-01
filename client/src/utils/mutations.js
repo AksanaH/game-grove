@@ -88,7 +88,7 @@ export const DELETE_GAME = gql`
       savedGames {
         gameId
         description
-        nams
+        name
       }
     }
   }
