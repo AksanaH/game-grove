@@ -13,10 +13,13 @@ const BioForm = () => {
   const username = data?.getUser?.username;
 
   useEffect(() => {
-    if (!loading) {
+    const storedBio = localStorage.getItem("userBio");
+    if (storedBio) {
+      setBio(storedBio);
+    } else if (!loading) {
       setBio(data.getUser.bio);
     }
-  }, [loading]);
+  }, [loading, data]);
 
   const handleFormSubmit = async ({ status }) => {
     try {
@@ -26,6 +29,7 @@ const BioForm = () => {
       setBio(data.updateUserBio.bio);
       setUpdatedBio("");
       form.resetFields();
+      localStorage.setItem("userBio", status);
       console.log("Update response:", data, updatedBio);
       message.success("Bio updated successfully!");
     } catch (e) {
