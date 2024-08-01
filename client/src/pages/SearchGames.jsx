@@ -42,35 +42,34 @@ const SearchGames = () => {
   };
 
   const handleSaveGame = async (game) => {
-  if (!Auth.loggedIn()) {
-    console.error("User is not logged in.");
-    return;
-  }
+    if (!Auth.loggedIn()) {
+      console.error("User is not logged in.");
+      return;
+    }
 
-  const gameData = {
-    id: game.id,
-    name: game.name,
-    description: game.description,
-    released: game.released,
-    image: game.image,
-    website: game.website,
-    creators: game.creators,
+    const gameData = {
+      id: game.id,
+      name: game.name,
+      description: game.description,
+      released: game.released,
+      image: game.image,
+      website: game.website,
+      creators: game.creators,
+    };
+
+    try {
+      const { data } = await saveGame({ variables: { gameData } });
+      console.log("Game saved successfully:", data);
+    } catch (err) {
+      console.error("Error saving game:", err.message);
+      if (err.graphQLErrors) {
+        err.graphQLErrors.forEach(({ message }) => console.error("GraphQL error:", message));
+      }
+      if (err.networkError) {
+        console.error("Network error:", err.networkError);
+      }
+    }
   };
-
-  try {
-    const { data } = await saveGame({ variables: { gameData } });
-    console.log("Game saved successfully:", data);
-  } catch (err) {
-    console.error("Error saving game:", err.message);
-    if (err.graphQLErrors) {
-      err.graphQLErrors.forEach(({ message }) => console.error("GraphQL error:", message));
-    }
-    if (err.networkError) {
-      console.error("Network error:", err.networkError);
-    }
-  }
-};
-
 
   const handleRateGame = async (gameId, rating) => {
     try {
@@ -107,18 +106,18 @@ const SearchGames = () => {
             </form>
           </Col>
         </Row>
-        <Row gutter={16} style={{ marginTop: '20px' }}>
+        <Row gutter={[16, 16]} style={{ marginTop: '20px' }}>
           {searchedGames.map((game) => (
             <Col key={game.id} span={8}>
               <Card
-                cover={<img alt={`Cover of ${game.name}`} src={game.image} />}
+                hoverable
+                cover={<img alt={game.name} src={game.image || 'https://via.placeholder.com/150'} />}
                 actions={[
-                  <Button onClick={() => handleSaveGame(game)}>Save</Button>,
+                  <Button onClick={() => handleSaveGame(game)}>Save Game</Button>,
                   <Rate
-                    allowClear={false}
                     onChange={(value) => handleRateGame(game.id, value)}
-                    value={rating[game.id] || 0}
-                  />
+                    value={rating[game.id]}
+                  />,
                 ]}
               >
                 <Meta title={game.name} description={game.description} />
