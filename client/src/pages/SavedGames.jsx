@@ -49,6 +49,8 @@ const SavedGames = () => {
   const [ratingError, setRatingError] = useState(null);
   const [playedErrorState, setPlayedErrorState] = useState(null);
   const [deleteErrorState, setDeleteErrorState] = useState(null);
+  const [recentlyDeleted, setRecentlyDeleted] = useState([]);
+  const [playedGames, setPlayedGames] = useState([]);
   const isMobile = useIsMobile();
 
   useEffect(() => {
@@ -100,9 +102,11 @@ const SavedGames = () => {
     }
 
     try {
+      const gameToPlay = savedGames.find((game) => game.id === gameId);
       await playedGame({
         variables: { gameId },
       });
+      setPlayedGames((prev) => [...prev, gameToPlay]);
       setPlayedErrorState(null);
     } catch (err) {
       setPlayedErrorState("Error marking game as played");
@@ -119,10 +123,15 @@ const SavedGames = () => {
     }
 
     try {
+      const gameToDelete = userData.savedGames.find(
+        (game) => game.id === gameId
+      );
+
       await deleteGame({
         variables: { gameId },
       });
 
+      setRecentlyDeleted((prev) => [...prev, gameToDelete]);
       removeGameId(gameId);
       setDeleteErrorState(null);
     } catch (err) {
@@ -171,7 +180,7 @@ const SavedGames = () => {
               />
               <Tooltip title="Mark as played">
                 <CheckSquareFilled
-                  onClick={() => handlePlayedGame(game.gameId)}
+                  onClick={() => handlePlayedGame(game.id)}
                   style={{
                     position: "absolute",
                     top: "10px",
@@ -200,7 +209,7 @@ const SavedGames = () => {
                 <Rate
                   key="rate"
                   value={game.rating}
-                  onChange={(value) => handleRateGame(game.gameId, value)}
+                  onChange={(value) => handleRateGame(game.id, value)}
                 />
               </Tooltip>
             </div>,
@@ -255,10 +264,10 @@ const SavedGames = () => {
               <Games games={userData.savedGames} />
             </Tabs.TabPane>
             <Tabs.TabPane tab={<TabName title="Played Games" />} key="2">
-              <Games games={userData.playedGames} />
+              <Games games={playedGames} />
             </Tabs.TabPane>
             <Tabs.TabPane tab={<TabName title="Recently Deleted" />} key="3">
-              <Games games={userData.recentlyDeleted} />
+              <Games games={recentlyDeleted} />
             </Tabs.TabPane>
           </Tabs>
         </div>
