@@ -140,7 +140,9 @@ const resolvers = {
         const updatedUser = await User.findById(context.user._id).populate(
           "savedGames"
         );
-
+        updatedUser.savedGames = updatedUser.savedGames.filter(
+          (game) => game.gameId
+        );
         return updatedUser;
       } catch (err) {
         console.error("Error rating game");

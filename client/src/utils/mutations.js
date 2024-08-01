@@ -54,7 +54,6 @@ export const RATE_GAME = gql`
     rateGame(gameId: $gameId, rating: $rating) {
       username
       _id
-      username
       savedGames {
         gameId
         name
