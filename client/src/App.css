@@ -46,7 +46,8 @@
   margin-bottom: 20px;
 }
 
-.container a, .container label{
+.container a,
+.container label {
   color: white !important;
 }
 
@@ -90,6 +91,41 @@ body {
   font-size: 1rem;
 }
 
+.welcome-section {
+  padding-bottom: 30px;
+}
+
+.welcome-title {
+  font-size: 3.5rem;
+}
+
+.welcome-description {
+  font-size: 1.2rem;
+  margin-bottom: 30px;
+}
+.search-button {
+  background-color: #0c0f06;
+  border-color: #0c0f06;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.search-button:hover {
+  background-color: #3f6da2;
+  color: #000;
+}
+
+.description {
+  line-height: 1.5;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.description.clamped {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  max-height: calc(1.5em * 3);
+}
 @media screen and (max-width: 992px) {
   .tabs-btn {
     font-size: 14px;
@@ -190,32 +226,9 @@ body {
   margin-bottom: 50px;
 }
 
-@media screen and (max-width: 500px)  {
+@media screen and (max-width: 500px) {
   .content {
     padding-left: 20px;
     padding-right: 20px;
   }
-} 
-
-.welcome-section {
-  padding-bottom: 30px;
-}
-
-.welcome-title {
-  font-size: 3.5rem;
-}
-
-.welcome-description {
-  font-size: 1.2rem;
-  margin-bottom: 30px;
-}
-.search-button {
-  background-color: #0c0f06;
-  border-color: #0c0f06;
-  transition: background-color 0.3s, border-color 0.3s;
-}
-
-.search-button:hover {
-  background-color: #3f6da2;
-  color: #000;
 }
