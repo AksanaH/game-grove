@@ -180,7 +180,7 @@ const SavedGames = () => {
               />
               <Tooltip title="Mark as played">
                 <CheckSquareFilled
-                  onClick={() => handlePlayedGame(game.gameId)}
+                  onClick={() => handlePlayedGame(game.id)}
                   style={{
                     position: "absolute",
                     top: "10px",
@@ -209,7 +209,7 @@ const SavedGames = () => {
                 <Rate
                   key="rate"
                   value={game.rating}
-                  onChange={(value) => handleRateGame(game.gameId, value)}
+                  onChange={(value) => handleRateGame(game.id, value)}
                 />
               </Tooltip>
             </div>,
