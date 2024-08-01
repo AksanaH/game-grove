@@ -10,10 +10,13 @@ const Gamecard = ({
   <Card
     hoverable
     style={{
-      width: 240,
+      height: 300,
     }}
     cover={
       <img
+      style={{
+        height: 200,
+      }}
         alt="example"
         src={image}
       />
