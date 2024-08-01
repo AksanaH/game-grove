@@ -3,19 +3,20 @@ import { Button, Form, Input,Row, Col } from "antd";
 import { useMutation } from "@apollo/client";
 import { CREATE_USER } from "../utils/mutations";
 import { useNavigate } from "react-router-dom";
+import Auth from "../utils/auth";
 
 const Signup = () => {
-  const [signupUser, { data, loading, error }] = useMutation(CREATE_USER);
+  const [signupUser, {  error }] = useMutation(CREATE_USER);
   const navigate = useNavigate();
 
   const onFinish = async (values) => {
     try {
       const { username, email, password } = values;
-      const response = await signupUser({
+      const{data} = await signupUser({
         variables: { username, email, password },
       });
-      console.log("Signup successful:", response.data.signupUser);
-      navigate("/login");
+      console.log("Signup successful:", data.createUser);
+      Auth.login(data.createUser.token);
     } catch (err) {
       console.error("Signup failed:", err);
     }
