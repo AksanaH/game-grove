@@ -7,6 +7,7 @@ import Auth from "../utils/auth"; // Import the Auth utility
 
 const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [visible, setVisible] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {

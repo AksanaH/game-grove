@@ -1,24 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { useMutation } from '@apollo/client';
-import Auth from '../utils/auth';
-import { SAVE_GAME } from '../utils/mutations';
-import { saveGameIds, getSavedGameIds } from '../utils/localStorage'; 
-import { searchGames } from '../utils/API'; 
-import { Layout, Row, Col, Button, Card, Input } from 'antd';
-
+import React, { useState } from "react";
+import { Layout, Row, Col, Button, Card, Input, Rate } from "antd";
+import { searchGames } from "../utils/API"; // Adjust path if needed
+import { useMutation } from "@apollo/client";
+import { SAVE_GAME, RATE_GAME } from "../utils/mutations"; // Adjust path if needed
+import Auth from "../utils/auth"; // Adjust path if needed
+import "../App.css";
 const { Content } = Layout;
 const { Meta } = Card;
 
 const SearchGames = () => {
   const [searchedGames, setSearchedGames] = useState([]);
-  const [searchInput, setSearchInput] = useState('');
-  const [savedGameIds, setSavedGameIds] = useState(getSavedGameIds());
-
+  const [searchInput, setSearchInput] = useState("");
   const [saveGame] = useMutation(SAVE_GAME);
-
-  useEffect(() => {
-    return () => saveGameIds(savedGameIds);
-  }, [savedGameIds]);
+  const [rateGame] = useMutation(RATE_GAME);
+  const [rating, setRating] = useState({});
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
@@ -28,71 +23,130 @@ const SearchGames = () => {
     }
 
     try {
-      const response = await searchGames(searchInput); 
-      if (!response.ok) {
-        throw new Error('Something went wrong!');
-      }
-
-      const { results } = await response.json();
-
-      const gameData = results.map((game) => ({
-        gameId: game.id,
+      const response = await searchGames(searchInput);
+      const data = await response.json();
+      const gameData = data.results.map((game) => ({
+        id: game.id.toString(),
         name: game.name,
-        description: game.description || 'No description available',
-        image: game.background_image || '',
+        description:
+          game.description ||
+          game.short_description ||
+          "No description available",
+        released: game.released || "",
+        image: game.background_image || "",
+        website: game.website || "",
+        creators: game.creators || [],
       }));
-
       setSearchedGames(gameData);
-      setSearchInput('');
+      setSearchInput("");
     } catch (err) {
-      console.error(err);
+      console.error("Error fetching games:", err);
     }
   };
 
-  const handleSaveGame = async (gameId) => {
-    const gameToSave = searchedGames.find((game) => game.gameId === gameId);
-    const token = Auth.loggedIn() ? Auth.getToken() : null;
-
-    if (!token) {
-      return false;
+  const handleSaveGame = async (game) => {
+    if (!Auth.loggedIn()) {
+      console.error("User is not logged in.");
+      return;
     }
 
-    try {
-      await saveGame({
-        variables: { gameData: gameToSave },
-      });
+    const gameData = {
+      id: game.id,
+      name: game.name,
+      description: game.description,
+      released: game.released,
+      image: game.image,
+      website: game.website,
+      creators: game.creators,
+    };
 
-      setSavedGameIds([...savedGameIds, gameToSave.gameId]);
+    try {
+      const { data } = await saveGame({ variables: { gameData } });
+      console.log("Game saved successfully:", data);
     } catch (err) {
-      console.error(err);
+      console.error("Error saving game:", err.message);
+      if (err.graphQLErrors) {
+        err.graphQLErrors.forEach(({ message }) =>
+          console.error("GraphQL error:", message)
+        );
+      }
+      if (err.networkError) {
+        console.error("Network error:", err.networkError);
+      }
+    }
+  };
+
+  const handleRateGame = async (gameId, rating) => {
+    try {
+      await rateGame({ variables: { gameId, rating } });
+      setRating((prev) => ({ ...prev, [gameId]: rating }));
+    } catch (err) {
+      console.error("Error rating game:", err.message);
+      if (err.graphQLErrors) {
+        err.graphQLErrors.forEach(({ message }) =>
+          console.error("GraphQL error:", message)
+        );
+      }
+      if (err.networkError) {
+        console.error("Network error:", err.networkError);
+      }
     }
   };
 
   return (
     <Layout>
-      <Content style={{ padding: '50px' }}>
+      <Content
+        style={{
+          padding: "50px",
+          backgroundColor: "#495330d3",
+        }}
+      >
         <Row justify="center">
-          <Col span={24} style={{ textAlign: 'center' }}>
+          <Col span={24} style={{ textAlign: "center" }}>
             <h1>Search for Games!</h1>
             <form onSubmit={handleFormSubmit}>
               <Input
-                type='text'
+                type="text"
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
-                placeholder='Search for a game'
-                style={{ width: '300px', marginRight: '10px' }}
+                placeholder="Search for a game"
+                style={{
+                  width: "300px",
+                  marginRight: "10px",
+                }}
               />
-              <Button type='primary' htmlType='submit'>
+              <Button
+                type="primary"
+                htmlType="submit"
+                className="search-button"
+              >
                 Submit Search
               </Button>
             </form>
           </Col>
         </Row>
-        <Row gutter={16} style={{ marginTop: '20px' }}>
+        <Row gutter={16} style={{ marginTop: "20px" }}>
           {searchedGames.map((game) => (
-            <Col key={game.gameId} span={8}>
+            <Col key={game.id} span={8}>
               <Card
-                cover={<img alt={`Cover of ${game.name}`} src={game.image} />}
+                hoverable
+                cover={
+                  <img
+                    alt={game.name}
+                    src={game.image || "https://via.placeholder.com/150"}
+                  />
+                }
+                actions={[
+                  <Button key="save" onClick={() => handleSaveGame(game)}>
+                    Save
+                  </Button>,
+                  <Rate
+                    key="rate"
+                    allowClear={false}
+                    onChange={(value) => handleRateGame(game.id, value)}
+                    value={rating[game.id] || 0}
+                  />,
+                ]}
               >
                 <Meta title={game.name} description={game.description} />
               </Card>
