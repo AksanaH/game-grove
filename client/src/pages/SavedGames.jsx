@@ -20,19 +20,13 @@ import { useMutation, useQuery } from "@apollo/client";
 import { SINGLE_USER } from "../utils/queries";
 const { Meta } = Card;
 
-const TabName = ({ title }) => {
-  return <h1 className="tabs-btn">{title}</h1>;
-};
+const TabName = ({ title }) => <h1 className="tabs-btn">{title}</h1>;
 
 const useIsMobile = () => {
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 576);
 
   useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 576);
-    };
-
-    handleResize();
+    const handleResize = () => setIsMobile(window.innerWidth <= 576);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
@@ -41,125 +35,145 @@ const useIsMobile = () => {
 };
 
 const SavedGames = () => {
-  const [tabPosition, setTabPosition] = useState("left");
-  const { loading, error, data } = useQuery(SINGLE_USER);
-  const [deleteGame, { error: deleteError }] = useMutation(DELETE_GAME);
-  const [rateGame, { error: rateError }] = useMutation(RATE_GAME);
-  const [playedGame, { error: playedError }] = useMutation(PLAYED_GAME);
+  const [tabPosition, setTabPosition] = useState(window.innerWidth < 768 ? "top" : "left");
+  const { loading, error, data, refetch } = useQuery(SINGLE_USER);
+  const [deleteGame] = useMutation(DELETE_GAME, {
+    onError: (err) => {
+      console.error("Error deleting game:", err);
+      setDeleteErrorState("Error deleting game");
+    },
+    update(cache, { data: { deleteGame } }) {
+      const { getUser } = cache.readQuery({ query: SINGLE_USER }) || { getUser: { savedGames: [], playedGames: [] } };
+      cache.writeQuery({
+        query: SINGLE_USER,
+        data: {
+          getUser: {
+            ...getUser,
+            savedGames: getUser.savedGames.filter(game => game.id !== deleteGame.id),
+          },
+        },
+      });
+    },
+  });
+  const [rateGame] = useMutation(RATE_GAME, {
+    onError: (err) => {
+      console.error("Error rating game:", err);
+      setRatingError("Error rating game");
+    },
+    update(cache, { data: { rateGame } }) {
+      const { getUser } = cache.readQuery({ query: SINGLE_USER }) || { getUser: { savedGames: [], playedGames: [] } };
+      cache.writeQuery({
+        query: SINGLE_USER,
+        data: {
+          getUser: {
+            ...getUser,
+            savedGames: getUser.savedGames.map(game =>
+              game.id === rateGame.id ? { ...game, rating: rateGame.rating } : game
+            ),
+          },
+        },
+      });
+    },
+  });
+  const [playedGame] = useMutation(PLAYED_GAME, {
+    onError: (err) => {
+      console.error("Error marking game as played:", err);
+      setPlayedErrorState("Error marking game as played");
+    },
+    update(cache, { data: { playedGame } }) {
+      const { getUser } = cache.readQuery({ query: SINGLE_USER }) || { getUser: { savedGames: [], playedGames: [] } };
+
+      const updatedPlayedGames = Array.isArray(getUser.playedGames) ? [...getUser.playedGames, playedGame] : [playedGame];
+      const updatedSavedGames = getUser.savedGames.filter(game => game.id !== playedGame.id);
+
+      cache.writeQuery({
+        query: SINGLE_USER,
+        data: {
+          getUser: {
+            ...getUser,
+            playedGames: updatedPlayedGames,
+            savedGames: updatedSavedGames,
+          },
+        },
+      });
+    },
+  });
+
   const [ratingError, setRatingError] = useState(null);
   const [playedErrorState, setPlayedErrorState] = useState(null);
   const [deleteErrorState, setDeleteErrorState] = useState(null);
   const [recentlyDeleted, setRecentlyDeleted] = useState([]);
+  const [savedGames, setSavedGames] = useState([]);
+  const [playedGames, setPlayedGames] = useState([]);
   const isMobile = useIsMobile();
 
   useEffect(() => {
-    const handleResize = () => {
-      setTabPosition(window.innerWidth < 768 ? "top" : "left");
-    };
-
-    window.addEventListener("resize", handleResize);
-    handleResize();
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+    if (!loading && !error && data) {
+      console.log("Fetched user data:", data);
+      setSavedGames(data.getUser.savedGames || []);
+      setPlayedGames(data.getUser.playedGames || []);
+    }
+  }, [loading, error, data]);
 
   if (loading) return <Spin size="large" />;
   if (error) return <Alert message="Error loading user data" type="error" />;
-  if (deleteError || rateError || playedError)
+  if (deleteErrorState || ratingError || playedErrorState)
     return <Alert message="Error performing operation" type="error" />;
 
-  const userData = data?.getUser || {
-    savedGames: [],
-    playedGames: [],
-    recentlyDeleted: [],
-  };
-
   const handleRateGame = async (gameId, rating) => {
-    console.log({ gameId, rating });
-
     const token = Auth.loggedIn() ? Auth.getToken() : null;
-    if (!token) {
-      return false;
-    }
+    if (!token) return false;
 
     try {
-      const { data } = await rateGame({
-        variables: { gameId, rating },
-      });
-
-      const updatedGames = userData.savedGames.map((game) =>
-        game.gameId === gameId
-          ? { ...game, rating: data.rateGame.rating }
-          : game
-      );
-
-      userData.savedGames = updatedGames;
-
+      await rateGame({ variables: { gameId, rating } });
       setRatingError(null);
+      refetch(); // Refetch data after rating
     } catch (err) {
-      setRatingError("Error rating game");
       console.error("Error rating game:", err);
+      setRatingError("Error rating game");
     }
   };
 
   const handlePlayedGame = async (gameId) => {
-    console.log({ gameId });
-    console.log("Game ID:", gameId);
     const token = Auth.loggedIn() ? Auth.getToken() : null;
-    if (!token) {
-      return false;
-    }
+    if (!token) return false;
 
     try {
-      await playedGame({
-        variables: { gameId },
-      });
+      const gameToPlay = savedGames.find(game => game.id === gameId);
+      if (!gameToPlay) throw new Error("Game not found in saved games!");
+
+      await playedGame({ variables: { gameId } });
+      setPlayedGames(prev => [...prev, gameToPlay]);
+      setSavedGames(prev => prev.filter(game => game.id !== gameId));
       setPlayedErrorState(null);
     } catch (err) {
-      setPlayedErrorState("Error marking game as played");
       console.error("Error marking game as played:", err);
+      setPlayedErrorState("Error marking game as played");
     }
   };
 
   const handleDeleteGame = async (gameId) => {
-    console.log({ gameId });
-
     const token = Auth.loggedIn() ? Auth.getToken() : null;
-    if (!token) {
-      return false;
-    }
+    if (!token) return false;
 
     try {
-      const gameToDelete = userData.savedGames.find(
-        (game) => game.id === gameId
-      );
+      const gameToDelete = savedGames.find(game => game.id === gameId);
+      if (!gameToDelete) throw new Error("Game not found in saved games!");
 
-      await deleteGame({
-        variables: { gameId },
-      });
-
-      setRecentlyDeleted((prev) => [...prev, gameToDelete]);
+      await deleteGame({ variables: { gameId } });
+      setRecentlyDeleted(prev => [...prev, gameToDelete]);
       removeGameId(gameId);
       setDeleteErrorState(null);
     } catch (err) {
-      setDeleteErrorState("Error deleting game");
       console.error("Error deleting game:", err);
-      if (err.graphQLErrors) {
-        err.graphQLErrors.forEach(({ message, locations, path }) =>
-          console.error(
-            `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
-          )
-        );
-      }
-      if (err.networkError) {
-        console.error(`[Network error]: ${err.networkError}`);
-      }
+      setDeleteErrorState("Error deleting game");
     }
   };
 
   const renderCards = (games) =>
-    (games || []).map((game) => (
+    (games || []).map(game => (
       <Col
-        key={game.gameId}
+        key={game.id}
         xs={24}
         sm={12}
         md={8}
@@ -167,34 +181,18 @@ const SavedGames = () => {
         className="card-container"
       >
         <Card
-          style={{
-            width: "100%",
-            backgroundColor: "#657441e0",
-            margin: "auto",
-          }}
+          style={{ width: "100%", backgroundColor: "#657441e0", margin: "auto" }}
           cover={
             <div style={{ position: "relative", display: "inline-block" }}>
               <img
                 alt="example"
                 src={game.image || "https://via.placeholder.com/300"}
-                style={{
-                  width: "100%",
-                  height: "50%",
-                  display: "block",
-                  borderRadius: "8px",
-                }}
+                style={{ width: "100%", height: "50%", display: "block", borderRadius: "8px" }}
               />
               <Tooltip title="Mark as played">
                 <CheckSquareFilled
                   onClick={() => handlePlayedGame(game.id)}
-                  style={{
-                    position: "absolute",
-                    top: "10px",
-                    right: "10px",
-                    cursor: "pointer",
-                    backgroundColor: "#ffffff",
-                    fontSize: "20px",
-                  }}
+                  style={{ position: "absolute", top: "10px", right: "10px", cursor: "pointer", backgroundColor: "#ffffff", fontSize: "20px" }}
                 />
               </Tooltip>
             </div>
@@ -202,14 +200,7 @@ const SavedGames = () => {
           actions={[
             <div
               key="actions"
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-                padding: "0 10px",
-                fontSize: "1.2rem",
-              }}
+              style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", padding: "0 10px", fontSize: "1.2rem" }}
             >
               <Tooltip title="Rate Me">
                 <Rate
@@ -218,27 +209,17 @@ const SavedGames = () => {
                   onChange={(value) => handleRateGame(game.id, value)}
                 />
               </Tooltip>
-            </div>,
+            </div>
           ]}
         >
           <Meta
             title={game.name}
             description={
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  gap: "10px",
-                }}
-              >
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "10px" }}>
                 <span>{game.description}</span>
                 <div style={{ display: "flex", gap: "10px" }}>
                   <Tooltip title="Delete Game">
-                    <DeleteFilled
-                      key="delete"
-                      onClick={() => handleDeleteGame(game.id)}
-                    />
+                    <DeleteFilled key="delete" onClick={() => handleDeleteGame(game.id)} />
                   </Tooltip>
                 </div>
               </div>
@@ -251,8 +232,8 @@ const SavedGames = () => {
   const Games = ({ games }) =>
     isMobile ? (
       <Carousel arrows dotPosition="left" infinite={false}>
-        {games.map((game) => (
-          <div key={game.gameId} style={{ padding: "0 8px" }}>
+        {games.map(game => (
+          <div key={game.id} style={{ padding: "0 8px" }}>
             {renderCards([game])}
           </div>
         ))}
@@ -267,10 +248,10 @@ const SavedGames = () => {
         <div className="tabs-container">
           <Tabs tabPosition={tabPosition}>
             <Tabs.TabPane tab={<TabName title="Saved Games" />} key="1">
-              <Games games={userData.savedGames} />
+              <Games games={savedGames} />
             </Tabs.TabPane>
             <Tabs.TabPane tab={<TabName title="Played Games" />} key="2">
-              <Games games={userData.playedGames} />
+              <Games games={playedGames} />
             </Tabs.TabPane>
             <Tabs.TabPane tab={<TabName title="Recently Deleted" />} key="3">
               <Games games={recentlyDeleted} />

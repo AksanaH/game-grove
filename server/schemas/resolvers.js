@@ -157,18 +157,22 @@ const resolvers = {
         if (!gameId || typeof gameId !== "string") {
           throw new Error("Invalid Game ID format");
         }
-
-        const game = await Game.findOne({ _id: gameId });
+        const game = await Game.findById(gameId);
         if (!game) {
           throw new Error("Game not found!");
         }
+        console.log("Marked as played:", game);
+        await Game.findByIdAndDelete(gameId);
 
-        game.played = true;
-        await game.save();
+        const updatedUser = await User.findByIdAndUpdate(
+          context.user._id,
+          { $pull: { savedGames: gameId } },
+          { new: true }
+        ).populate("savedGames");
 
-        const updatedUser = await User.findById(context.user._id).populate(
-          "savedGames"
-        );
+        if (!updatedUser) {
+          throw new Error("Couldn't find user with this id!");
+        }
 
         return updatedUser;
       } catch (err) {
