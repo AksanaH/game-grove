@@ -74,7 +74,7 @@ const resolvers = {
 
         const updatedUser = await User.findByIdAndUpdate(
           context.user._id,
-          { $addToSet: { savedGames: gameData.id } },
+          { $addToSet: { savedGames: game._id } },
           { new: true, runValidators: true }
         ).populate("savedGames");
 
