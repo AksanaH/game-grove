@@ -2,7 +2,7 @@ import { Button, Checkbox, Form, Input, Row, Col } from "antd";
 import { useMutation } from "@apollo/client";
 import { USER_LOGIN } from "../utils/mutations";
 import Auth from "../utils/auth";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const Login = () => {
   const [login] = useMutation(USER_LOGIN);
@@ -53,7 +53,6 @@ const Login = () => {
               name="basic"
               labelCol={{ span: 24 }}
               wrapperCol={{ span: 24 }}
-              style={{ maxWidth: 600 }}
               initialValues={{ remember: true }}
               onFinish={handleFormSubmit}
               onFinishFailed={onFinishFailed}
@@ -82,17 +81,18 @@ const Login = () => {
               <Form.Item
                 name="remember"
                 valuePropName="checked"
-                wrapperCol={{ offset: 5, span: 16 }}
+                wrapperCol={{ offset: 4, span: 16 }}
               >
                 <Checkbox>Remember me</Checkbox>
               </Form.Item>
 
-              <Form.Item wrapperCol={{ offset: 5, span: 16 }}>
+              <Form.Item wrapperCol={{ offset: 4, span: 16 }}>
                 <Button type="primary" htmlType="submit">
                   Submit
                 </Button>
               </Form.Item>
             </Form>
+            <Link to="/signup">Don't have an account? Sign up here!</Link>
           </div>
         </Col>
       </Row>
