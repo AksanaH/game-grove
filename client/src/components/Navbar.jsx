@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Col, Row } from "antd";
+import { Col, Row, Dropdown, Menu, Button } from "antd";
+import { MenuOutlined } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
 import "./Navbar.css";
 import Auth from "../utils/auth"; // Import the Auth utility
@@ -19,58 +20,85 @@ const Navbar = () => {
     navigate("/"); // Redirect to home page after logout
   };
 
-  return (
-    <Row justify="end" className="header" align="middle">
-      <Col span={2} pull={13}>
-        <img src="./images/gamecue-transparent.png" alt="" style={{width: "50px", height: "50px"}}/>
-      </Col>
-      <Col span={2}>
+  const menu = (
+    <Menu style={{ backgroundColor: "black" }}>
+      <Menu.Item key="1">
         <Link className="navlink" to="/">
           Games
         </Link>
-      </Col>
-      <Col span={2}>
+      </Menu.Item>
+      <Menu.Item key="2">
         <Link className="navlink" to="/searchgames">
           Search
         </Link>
-      </Col>
+      </Menu.Item>
       {isLoggedIn && (
         <>
-          <Col span={2}>
+          <Menu.Item key="3">
             <Link className="navlink" to="/mygames">
               My Games
             </Link>
-          </Col>
-          <Col span={2}>
+          </Menu.Item>
+          <Menu.Item key="4">
             <Link className="navlink" to="/profile">
               Profile
             </Link>
-          </Col>
+          </Menu.Item>
         </>
       )}
-      <Col span={2}>
-        {isLoggedIn ? (
-          <span
-            className="navlink"
-            onClick={handleLogout}
-            style={{ cursor: "pointer" }}
-          >
+      {isLoggedIn ? (
+        <Menu.Item key="5" onClick={handleLogout}>
+          <span className="navlink" style={{ cursor: "pointer" }}>
             Logout
           </span>
-        ) : (
-          <Link className="navlink" to="/login">
-            Login
-          </Link>
-        )}
-      </Col>
-      {!isLoggedIn && (
-        <Col span={2}>
-          <Link className="navlink" to="/signup">
-            Signup
-          </Link>
-        </Col>
+        </Menu.Item>
+      ) : (
+        <>
+          <Menu.Item key="6">
+            <Link className="navlink" to="/login">
+              Login
+            </Link>
+          </Menu.Item>
+          <Menu.Item key="7">
+            <Link className="navlink" to="/signup">
+              Signup
+            </Link>
+          </Menu.Item>
+        </>
       )}
-    </Row>
+    </Menu>
+  );
+
+  return (
+    <Row justify="space-between" className="header" align="middle">
+    <Col>
+      <img src="./images/gamecue-transparent.png" alt="" style={{ width: "50px", height: "50px" }} />
+    </Col>
+    <Col className="navlinks">
+      <Link className="navlink" to="/">Games</Link>
+      <Link className="navlink" to="/searchgames">Search</Link>
+      {isLoggedIn && (
+        <>
+          <Link className="navlink" to="/mygames">My Games</Link>
+          <Link className="navlink" to="/profile">Profile</Link>
+        </>
+      )}
+      {isLoggedIn ? (
+        <span className="navlink" onClick={handleLogout} style={{ cursor: "pointer" }}>Logout</span>
+      ) : (
+        <>
+          <Link className="navlink" to="/login">Login</Link>
+          <Link className="navlink" to="/signup">Signup</Link>
+        </>
+      )}
+    </Col>
+    <Col className="menu-icon">
+      <Dropdown overlay={menu} trigger={['click']}>
+        <Button type="text" icon={<MenuOutlined style={{ color: "white" }} />} />
+      </Dropdown>
+    </Col>
+  </Row>
+  
   );
 };
 
