@@ -118,7 +118,7 @@ const resolvers = {
       }
     },
 
-    rateGame: async (parent, { id, rating }, context) => {
+    rateGame: async (parent, { gameId, rating }, context) => {
       if (!context.user) {
         throw new Error("You need to be logged in!");
       }
