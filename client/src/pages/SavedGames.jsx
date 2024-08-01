@@ -50,7 +50,6 @@ const SavedGames = () => {
   const [playedErrorState, setPlayedErrorState] = useState(null);
   const [deleteErrorState, setDeleteErrorState] = useState(null);
   const [recentlyDeleted, setRecentlyDeleted] = useState([]);
-  const [playedGames, setPlayedGames] = useState([]);
   const isMobile = useIsMobile();
 
   useEffect(() => {
@@ -102,11 +101,9 @@ const SavedGames = () => {
     }
 
     try {
-      const gameToPlay = savedGames.find((game) => game.id === gameId);
       await playedGame({
         variables: { gameId },
       });
-      setPlayedGames((prev) => [...prev, gameToPlay]);
       setPlayedErrorState(null);
     } catch (err) {
       setPlayedErrorState("Error marking game as played");
@@ -209,7 +206,7 @@ const SavedGames = () => {
                 <Rate
                   key="rate"
                   value={game.rating}
-                  onChange={(value) => handleRateGame(game.id, value)}
+                  onChange={(value) => handleRateGame(game.gameId, value)}
                 />
               </Tooltip>
             </div>,
@@ -264,7 +261,7 @@ const SavedGames = () => {
               <Games games={userData.savedGames} />
             </Tabs.TabPane>
             <Tabs.TabPane tab={<TabName title="Played Games" />} key="2">
-              <Games games={playedGames} />
+              <Games games={userData.playedGames} />
             </Tabs.TabPane>
             <Tabs.TabPane tab={<TabName title="Recently Deleted" />} key="3">
               <Games games={recentlyDeleted} />
